@@ -69,7 +69,6 @@ namespace SimListener
         {
             return !(left == right);
         }
-#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
     }
     internal class TrackList : List<Track>
     {
@@ -388,14 +387,16 @@ namespace SimListener
             {
                 foreach (SimvarRequest oSimvarRequest in lSimvarRequests)
                 {
+                    if (oSimvarRequest.Value is null) continue;
                     if (oSimvarRequest.Parameter == "PLANE LONGITUDE") tempTrack.Longitude = oSimvarRequest.Value;
                     if (oSimvarRequest.Parameter == "PLANE LATITUDE") tempTrack.Latitude  = oSimvarRequest.Value;
                     if (oSimvarRequest.Parameter == "AIRSPEED TRUE") tempTrack.Airspeed   = oSimvarRequest.Value;
                     if (oSimvarRequest.Parameter == "PLANE ALTITUDE") tempTrack.Altitude = oSimvarRequest.Value;
                     if (oSimvarRequest.Parameter == "PLANE HEADING DEGREES TRUE") tempTrack.Heading   = oSimvarRequest.Value;
 
-                    if (ReturnValue.ContainsKey(oSimvarRequest.Parameter) != true)
-                        ReturnValue.Add(oSimvarRequest.Parameter, oSimvarRequest.Value);
+                    if( oSimvarRequest.Parameter != null)
+                        if (ReturnValue.ContainsKey(oSimvarRequest.Parameter) != true)
+                            ReturnValue.Add(oSimvarRequest.Parameter, oSimvarRequest.Value);
 
                     if (!oSimvarRequest.bPending)
                     {
