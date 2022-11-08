@@ -36,20 +36,12 @@ namespace SimListener
     {
         public DEFINITION eDef = DEFINITION.Dummy;
         public REQUEST eRequest = REQUEST.Dummy;
-
-#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-        public string Parameter { get; set; }
-#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-        public string Measure { get; set; }
-#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+        public string? Parameter { get; set; }
+        public string? Measure { get; set; }
         public bool bIsString = false;
-
         public bool bPending = true;
         public bool bStillPending = false;
-
-#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-        public string Value { get; set; }
+        public string? Value { get; set; }
 
         public override bool Equals(object? obj)
         {
@@ -156,19 +148,17 @@ namespace SimListener
             }
         }
 
-#pragma warning disable CS8765 // Nullability of type of parameter doesn't match overridden member (possibly because of nullability attributes).
-        public override bool Equals(object obj)
-#pragma warning restore CS8765 // Nullability of type of parameter doesn't match overridden member (possibly because of nullability attributes).
+        public override bool Equals(object? obj)
         {
-#pragma warning disable CS8604 // Possible null reference argument.
+            if (obj is null) return false;
+
             return Equals(obj as Track);
-#pragma warning restore CS8604 // Possible null reference argument.
         }
 
-#pragma warning disable CS8767 // Nullability of reference types in type of parameter doesn't match implicitly implemented member (possibly because of nullability attributes).
-        public bool Equals(Track other)
-#pragma warning restore CS8767 // Nullability of reference types in type of parameter doesn't match implicitly implemented member (possibly because of nullability attributes).
+        public bool Equals(Track? other)
         {
+            if (other is null) return false;
+
             return latitude == other.latitude &&
                    longitude == other.longitude &&
                    altitude == other.altitude &&
@@ -371,6 +361,7 @@ namespace SimListener
                 AddRequest("PLANE HEADING DEGREES TRUE", "degrees", false);  
 
                 Connected = true;
+                Console.WriteLine("Connected to Flight Simulator");
 
             }
             catch (COMException)
@@ -454,7 +445,6 @@ namespace SimListener
             ++m_iCurrentDefinition;
             ++m_iCurrentRequest;
         }
-
         private static bool Validate( string request )
         {
             if (request == null) return false;
