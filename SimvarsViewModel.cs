@@ -1,4 +1,12 @@
-﻿using Microsoft.FlightSimulator.SimConnect;
+﻿
+#if _WIN64
+     using SimConnect;
+#else
+     using SimConnectStubb;
+#endif
+
+
+
 using System.Collections.ObjectModel;
 using System.Runtime.InteropServices;
 
@@ -198,6 +206,7 @@ namespace SimListener
     {
         #region Public
         public bool Connected { get; set; }
+        
         #endregion
 
         #region Private
@@ -238,8 +247,19 @@ namespace SimListener
                 return false;
             }
         }
+
         private void SimConnect_OnRecvOpen(SimConnect sender, SIMCONNECT_RECV_OPEN data)
         {
+            if (sender is null)
+            {
+                throw new ArgumentNullException(nameof(sender));
+            }
+
+            if (data is null)
+            {
+                throw new ArgumentNullException(nameof(data));
+            }
+
             Connected = true;
 
             // Register pending requests
