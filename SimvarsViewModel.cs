@@ -1,11 +1,9 @@
 ﻿
-#if _WIN64
-     using SimConnect;
+#if _WINDOWS
+     using Microsoft.FlightSimulator.SimConnect;
 #else
      using SimConnectStubb;
 #endif
-
-
 
 using System.Collections.ObjectModel;
 using System.Runtime.InteropServices;
