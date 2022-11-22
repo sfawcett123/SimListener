@@ -333,11 +333,7 @@ namespace SimListener
         #region Public Methods
         public void Disconnect()
         {
-            if (m_oSimConnect != null)
-            {
-                /// Dispose serves the same purpose as SimConnect_Close()
-                m_oSimConnect.Dispose();
-            }
+            m_oSimConnect?.Dispose();
 
             Connected = false;
 
@@ -438,11 +434,11 @@ namespace SimListener
         {
             return _TrackList.List();
         }
-        public void AddRequest(string _sNewSimvarRequest, string _sNewUnitRequest, bool _bIsString)
+        public ErrorCodes AddRequest(string _sNewSimvarRequest, string _sNewUnitRequest, bool _bIsString)
         {
             if( Validate( _sNewSimvarRequest ) == false )
             {
-                throw new Exception( string.Format( "Request {0} is not valid", _sNewSimvarRequest ));
+                return ErrorCodes.INVALID_DATA_REQUEST;
             }
             
             SimvarRequest oSimvarRequest = new()
@@ -454,15 +450,17 @@ namespace SimListener
                 Measure = _sNewUnitRequest 
             };
 
-            if (lSimvarRequests.Contains<SimvarRequest>(oSimvarRequest)) return ;
+            if (lSimvarRequests.Contains<SimvarRequest>(oSimvarRequest)) return ErrorCodes.OK;
 
             oSimvarRequest.bPending = !RegisterToSimConnect(oSimvarRequest);
             oSimvarRequest.bStillPending = oSimvarRequest.bPending;
 
-            if( lSimvarRequests != null) lSimvarRequests.Add(oSimvarRequest);
+            lSimvarRequests?.Add(oSimvarRequest);
 
             ++m_iCurrentDefinition;
             ++m_iCurrentRequest;
+
+            return ErrorCodes.OK;
         }
         private static bool Validate( string request )
         {
