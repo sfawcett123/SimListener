@@ -18,10 +18,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\SimConnect\SimConnectStub\SimConnectStub.csproj" />
-  </ItemGroup>
   <PropertyGroup Condition=" '$(OS)' == 'Windows_NT' ">
        <DefineConstants>_WINDOWS</DefineConstants>
   </PropertyGroup>

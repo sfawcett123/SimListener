@@ -203,7 +203,7 @@ namespace SimListener
     public class SimvarsViewModel
     {
         #region Public
-        public bool Connected { get; set; }
+        public bool Connected { get { return m_oSimConnect is not null; } }
         
         #endregion
 
@@ -252,13 +252,15 @@ namespace SimListener
             {
                 throw new ArgumentNullException(nameof(sender));
             }
+            
+            Console.WriteLine( $" Recieve Open {data}" );
+            AddRequest("PLANE LATITUDE", "degrees", false);
+            AddRequest("PLANE LONGITUDE", "degrees", false);
+            AddRequest("AIRSPEED TRUE", "knots", false);
+            AddRequest("PLANE ALTITUDE", "feet", false);
+            AddRequest("PLANE HEADING DEGREES TRUE", "degrees", false);
 
-            if (data is null)
-            {
-                throw new ArgumentNullException(nameof(data));
-            }
-
-            Connected = true;
+            Console.WriteLine("Connected to Flight Simulator");
 
             // Register pending requests
             if (lSimvarRequests != null)
@@ -276,6 +278,7 @@ namespace SimListener
         private void SimConnect_OnRecvQuit(SimConnect sender, SIMCONNECT_RECV data)
         {
             Disconnect();
+            m_oSimConnect.Dispose();
         }
         private void SimConnect_OnRecvException(SimConnect sender, SIMCONNECT_RECV_EXCEPTION data)
         {
@@ -335,8 +338,6 @@ namespace SimListener
         {
             m_oSimConnect?.Dispose();
 
-            Connected = false;
-
             // Set all requests as pending
             if ( lSimvarRequests != null)
             {
@@ -347,39 +348,37 @@ namespace SimListener
                 }
             }
         }
+
         public void Connect()
         {
-            try
+            if (m_oSimConnect is null)
             {
-                /// The constructor is similar to SimConnect_Open in the native API
-                m_oSimConnect = new SimConnect("SimListener", (IntPtr)null, WM_USER_SIMCONNECT, null, 0);
+                try
+                {
+                    /// The constructor is similar to SimConnect_Open in the native API
+                    m_oSimConnect = new SimConnect("SimListener", (IntPtr )null, WM_USER_SIMCONNECT, null, 0);
 
-                /// Listen to connect and quit msgs
-                m_oSimConnect.OnRecvOpen += new SimConnect.RecvOpenEventHandler(SimConnect_OnRecvOpen);
-                m_oSimConnect.OnRecvQuit += new SimConnect.RecvQuitEventHandler(SimConnect_OnRecvQuit);
+                    if (m_oSimConnect is not null)
+                    {
+                        /// Listen to connect and quit msgs
+                        m_oSimConnect.OnRecvOpen += new SimConnect.RecvOpenEventHandler(SimConnect_OnRecvOpen);
+                        m_oSimConnect.OnRecvQuit += new SimConnect.RecvQuitEventHandler(SimConnect_OnRecvQuit);
 
-                /// Listen to exceptions
-                m_oSimConnect.OnRecvException += new SimConnect.RecvExceptionEventHandler(SimConnect_OnRecvException);
+                        /// Listen to exceptions
+                        m_oSimConnect.OnRecvException += new SimConnect.RecvExceptionEventHandler(SimConnect_OnRecvException);
 
-                /// Catch a simobject data request
-                m_oSimConnect.OnRecvSimobjectDataBytype += new SimConnect.RecvSimobjectDataBytypeEventHandler(SimConnect_OnRecvSimobjectDataBytype);
+                        /// Catch a simobject data request
+                        m_oSimConnect.OnRecvSimobjectDataBytype += new SimConnect.RecvSimobjectDataBytypeEventHandler(SimConnect_OnRecvSimobjectDataBytype);
 
-                m_oSimConnect.OnRecvSystemState += new SimConnect.RecvSystemStateEventHandler(SimConnect_OnRecvEvent);
-                m_oSimConnect.SubscribeToSystemEvent(EVENT.RECUR_1SEC, "1sec");
-                
-                AddRequest("PLANE LATITUDE" , "degrees", false);
-                AddRequest("PLANE LONGITUDE", "degrees", false);
-                AddRequest("AIRSPEED TRUE", "knots"  , false);
-                AddRequest("PLANE ALTITUDE" , "feet"   , false);
-                AddRequest("PLANE HEADING DEGREES TRUE", "degrees", false);  
+                        m_oSimConnect.OnRecvSystemState += new SimConnect.RecvSystemStateEventHandler(SimConnect_OnRecvEvent);
+                        m_oSimConnect.SubscribeToSystemEvent(EVENT.RECUR_1SEC, "1sec");
+                    }
 
-                Connected = true;
-                Console.WriteLine("Connected to Flight Simulator");
+                }
+                catch (COMException)
+                {
 
-            }
-            catch (COMException)
-            {
-                Connected = false;
+                }
             }
         }
         public Dictionary<string, string> AircraftData()
@@ -436,6 +435,7 @@ namespace SimListener
         }
         public ErrorCodes AddRequest(string _sNewSimvarRequest, string _sNewUnitRequest, bool _bIsString)
         {
+            Console.WriteLine($"Adding Request {_sNewSimvarRequest}");
             if( Validate( _sNewSimvarRequest ) == false )
             {
                 return ErrorCodes.INVALID_DATA_REQUEST;
@@ -450,6 +450,7 @@ namespace SimListener
                 Measure = _sNewUnitRequest 
             };
 
+            Console.WriteLine($"Checking Contents {_sNewSimvarRequest}");
             if (lSimvarRequests.Contains<SimvarRequest>(oSimvarRequest)) return ErrorCodes.OK;
 
             oSimvarRequest.bPending = !RegisterToSimConnect(oSimvarRequest);
@@ -460,6 +461,7 @@ namespace SimListener
             ++m_iCurrentDefinition;
             ++m_iCurrentRequest;
 
+            Console.WriteLine($"Completed {_sNewSimvarRequest}");
             return ErrorCodes.OK;
         }
         private static bool Validate( string request )
