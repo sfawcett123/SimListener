@@ -42,6 +42,7 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         shell: powershell
         run: |
+          wget "https://onedrive.live.com/download?cid=6C332C671F7791DA&resid=6c332c671f7791da%215290&authkey=${{ secrets.SIMCONNECT}}" -OutFile simconnect.dll
           .\.sonar\scanner\dotnet-sonarscanner begin /k:"sfawcett123_SimListener" /o:"sfawcett123" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"
           dotnet build
           .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
