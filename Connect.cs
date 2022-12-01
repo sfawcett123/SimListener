@@ -39,7 +39,6 @@ namespace SimListener
         // ...
     };
 
-
     public class Connect
     {
         #region Public
@@ -306,7 +305,7 @@ namespace SimListener
         }
         public ErrorCodes AddRequest(string _sNewSimvarRequest, string _sNewUnitRequest, bool _bIsString)
         {
-            Console.WriteLine($"Adding Request {_sNewSimvarRequest}");
+            
             if (Validate(_sNewSimvarRequest) == false)
             {
                 return ErrorCodes.INVALID_DATA_REQUEST;
@@ -321,7 +320,6 @@ namespace SimListener
                 Measure = _sNewUnitRequest
             };
 
-            Console.WriteLine($"Checking Contents {_sNewSimvarRequest}");
             if (lSimvarRequests.Contains<SimListener>(oSimvarRequest))
             {
                 return ErrorCodes.OK;
@@ -330,6 +328,7 @@ namespace SimListener
             oSimvarRequest.bPending = !RegisterToSimConnect(oSimvarRequest);
             oSimvarRequest.bStillPending = oSimvarRequest.bPending;
 
+            Console.WriteLine($"Adding Request {_sNewSimvarRequest}");
             lSimvarRequests?.Add(oSimvarRequest);
 
             ++m_iCurrentDefinition;
