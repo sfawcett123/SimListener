@@ -270,23 +270,17 @@ namespace SimListener
                         tempTrack.Heading = oSimvarRequest.Value;
                     }
 
-                    if (oSimvarRequest.Parameter is not null)
+
+                    if (!ReturnValue.ContainsKey(oSimvarRequest.Parameter))
                     {
-                        if (oSimvarRequest.Value is not null)
-                        {
-                            if (!ReturnValue.ContainsKey(oSimvarRequest.Parameter))
-                            {
-                                ReturnValue.Add(oSimvarRequest.Parameter, oSimvarRequest.Value);
-                            }
-                            else
-                            {
-                                ReturnValue[oSimvarRequest.Parameter] = oSimvarRequest.Value;
-                            }
-                        }
-                        else
-                        {
-                            ReturnValue[oSimvarRequest.Parameter] = "";
-                        }
+                        ReturnValue.Add(oSimvarRequest.Parameter, "" );
+                        Console.WriteLine($"Creating {oSimvarRequest.Parameter} ");
+                    }
+
+                    if (oSimvarRequest.Value is not null)
+                    { 
+                        ReturnValue[oSimvarRequest.Parameter] = oSimvarRequest.Value;
+                        Console.WriteLine($"UPDATING {oSimvarRequest.Parameter} = {oSimvarRequest.Value} ");
                     }
             
 
