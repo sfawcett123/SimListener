@@ -1,12 +1,14 @@
 ﻿
 #if _WINDOWS
 using Microsoft.FlightSimulator.SimConnect;
+using Microsoft.Win32;
 #else
      using SimConnectStubb;
 #endif
 
 using System.Collections.ObjectModel;
 using System.Runtime.InteropServices;
+using System.Xml.Linq;
 
 namespace SimListener
 {
@@ -236,17 +238,12 @@ namespace SimListener
                 { "AircaftLoaded" ,  AircaftLoaded }
             };
 
-
             m_oSimConnect?.RequestSystemState(REQUESTS.AIRCRAFT_LOADED, "AircraftLoaded");
 
             if (lSimvarRequests != null)
             {
                 foreach (SimListener oSimvarRequest in lSimvarRequests)
                 {
-                    if (oSimvarRequest.Value is null)
-                    {
-                        continue;
-                    }
 
                     if (oSimvarRequest.Parameter == "PLANE LONGITUDE")
                     {
@@ -273,17 +270,29 @@ namespace SimListener
                         tempTrack.Heading = oSimvarRequest.Value;
                     }
 
-                    if (oSimvarRequest.Parameter != null)
+                    if (oSimvarRequest.Parameter is not null)
                     {
-                        if (ReturnValue.ContainsKey(oSimvarRequest.Parameter) != true)
+                        if (oSimvarRequest.Value is not null)
                         {
-                            ReturnValue.Add(oSimvarRequest.Parameter, oSimvarRequest.Value);
+                            if (!ReturnValue.ContainsKey(oSimvarRequest.Parameter))
+                            {
+                                ReturnValue.Add(oSimvarRequest.Parameter, oSimvarRequest.Value);
+                            }
+                            else
+                            {
+                                ReturnValue[oSimvarRequest.Parameter] = oSimvarRequest.Value;
+                            }
+                        }
+                        else
+                        {
+                            ReturnValue[oSimvarRequest.Parameter] = "";
                         }
                     }
+            
 
                     if (!oSimvarRequest.bPending)
                     {
-                        m_oSimConnect?.RequestDataOnSimObjectType(oSimvarRequest.eRequest, oSimvarRequest.eDef, 0, SIMCONNECT_SIMOBJECT_TYPE.ALL);
+                        m_oSimConnect?.RequestDataOnSimObjectType(oSimvarRequest.eRequest, oSimvarRequest.eDef, 0, SIMCONNECT_SIMOBJECT_TYPE.USER);
 
                         oSimvarRequest.bPending = true;
                     }
@@ -302,6 +311,30 @@ namespace SimListener
         public List<Track> TrackData()
         {
             return _TrackList.List();
+        }
+
+        public string AddRequests(List<string> Outputs)
+        {
+            if (Outputs is not null)
+            {
+                if ( Outputs.Any())
+                {
+                    foreach (string output in Outputs)
+                    {
+                        var rval = AddRequest(output);
+                        if( rval != ErrorCodes.OK )
+                        {
+                            return output;
+                        }
+                    }
+                }
+            }
+            return "OK";
+        }
+
+        public ErrorCodes AddRequest(string _sNewSimvarRequest)
+        {
+            return AddRequest(_sNewSimvarRequest, "", true);
         }
         public ErrorCodes AddRequest(string _sNewSimvarRequest, string _sNewUnitRequest, bool _bIsString)
         {
@@ -334,7 +367,6 @@ namespace SimListener
             ++m_iCurrentDefinition;
             ++m_iCurrentRequest;
 
-            Console.WriteLine($"Completed {_sNewSimvarRequest}");
             return ErrorCodes.OK;
         }
         private static bool Validate(string request)
