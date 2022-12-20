@@ -5,6 +5,9 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <PlatformTarget>x64</PlatformTarget>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <Title>Sim Listener</Title>
+    <PackageProjectUrl>https://github.com/sfawcett123/SimListener</PackageProjectUrl>
   </PropertyGroup>
 
   <ItemGroup>
@@ -15,6 +18,10 @@
 
   <ItemGroup>
     <Folder Include="Sim\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="https:\github.com\sfawcett123\SimListener" />
   </ItemGroup>
 
   <ItemGroup>
