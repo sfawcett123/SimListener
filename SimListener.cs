@@ -1,9 +1,4 @@
-﻿#if _WINDOWS
-#else
-     using SimConnectStubb;
-#endif
-
-
+﻿
 namespace SimListener
 {
     internal class SimListener : IEquatable<SimListener?>

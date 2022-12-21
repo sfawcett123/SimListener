@@ -1,14 +1,8 @@
-﻿
-#if _WINDOWS
-using Microsoft.FlightSimulator.SimConnect;
-using Microsoft.Win32;
-#else
-     using SimConnectStubb;
-#endif
+﻿using Microsoft.FlightSimulator.SimConnect;
 
 using System.Collections.ObjectModel;
 using System.Runtime.InteropServices;
-using System.Xml.Linq;
+
 
 namespace SimListener
 {
