@@ -187,7 +187,6 @@ namespace SimListener
                 }
             }
         }
-
         public void ConnecttoSim()
         {
             if (m_oSimConnect is null)
@@ -238,6 +237,8 @@ namespace SimListener
             {
                 foreach (SimListener oSimvarRequest in lSimvarRequests)
                 {
+                    if (oSimvarRequest.Value is null)
+                        continue;
 
                     if (oSimvarRequest.Parameter == "PLANE LONGITUDE")
                     {
@@ -264,19 +265,20 @@ namespace SimListener
                         tempTrack.Heading = oSimvarRequest.Value;
                     }
 
-
-                    if (!ReturnValue.ContainsKey(oSimvarRequest.Parameter))
+                    if (oSimvarRequest.Parameter is not null)
                     {
-                        ReturnValue.Add(oSimvarRequest.Parameter, "" );
-                        Console.WriteLine($"Creating {oSimvarRequest.Parameter} ");
-                    }
+                        if (!ReturnValue.ContainsKey(oSimvarRequest.Parameter))
+                        {
+                            ReturnValue.Add(oSimvarRequest.Parameter, "");
+                            Console.WriteLine($"Creating {oSimvarRequest.Parameter} ");
+                        }
 
-                    if (oSimvarRequest.Value is not null)
-                    { 
-                        ReturnValue[oSimvarRequest.Parameter] = oSimvarRequest.Value;
-                        Console.WriteLine($"UPDATING {oSimvarRequest.Parameter} = {oSimvarRequest.Value} ");
+                        if (oSimvarRequest.Value is not null)
+                        {
+                            ReturnValue[oSimvarRequest.Parameter] = oSimvarRequest.Value;
+                            Console.WriteLine($"UPDATING {oSimvarRequest.Parameter} = {oSimvarRequest.Value} ");
+                        }
                     }
-            
 
                     if (!oSimvarRequest.bPending)
                     {
@@ -300,7 +302,6 @@ namespace SimListener
         {
             return _TrackList.List();
         }
-
         public string AddRequests(List<string> Outputs)
         {
             if (Outputs is not null)
@@ -319,7 +320,6 @@ namespace SimListener
             }
             return "OK";
         }
-
         public ErrorCodes AddRequest(string _sNewSimvarRequest)
         {
             return AddRequest(_sNewSimvarRequest, "", true);
