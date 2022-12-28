@@ -3,7 +3,24 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33122.133
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimListener", "SimListener.csproj", "{99AA581F-BB18-414C-A57D-F2380AC3F612}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "github", "github", "{363C04C4-1C05-444B-950B-822160009582}"
+	ProjectSection(SolutionItems) = preProject
+		.github\dependabot.yml = .github\dependabot.yml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{45CB9EF7-988B-42AE-A205-C2807809CCEB}"
+	ProjectSection(SolutionItems) = preProject
+		.github\workflows\dotnet.yml = .github\workflows\dotnet.yml
+		.github\workflows\sonar.yml = .github\workflows\sonar.yml
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimListener", "SimListener\SimListener.csproj", "{9EDBF513-ABF8-423E-A7E0-EF51830A8F15}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{D72E1562-D78C-4809-901D-F2D30B2EC018}"
+	ProjectSection(SolutionItems) = preProject
+		Sim\Microsoft.FlightSimulator.SimConnect.dll = Sim\Microsoft.FlightSimulator.SimConnect.dll
+		Sim\SimConnect.dll = Sim\SimConnect.dll
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,13 +28,16 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{99AA581F-BB18-414C-A57D-F2380AC3F612}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{99AA581F-BB18-414C-A57D-F2380AC3F612}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{99AA581F-BB18-414C-A57D-F2380AC3F612}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{99AA581F-BB18-414C-A57D-F2380AC3F612}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9EDBF513-ABF8-423E-A7E0-EF51830A8F15}.Debug|Any CPU.ActiveCfg = Debug|x64
+		{9EDBF513-ABF8-423E-A7E0-EF51830A8F15}.Debug|Any CPU.Build.0 = Debug|x64
+		{9EDBF513-ABF8-423E-A7E0-EF51830A8F15}.Release|Any CPU.ActiveCfg = Release|x64
+		{9EDBF513-ABF8-423E-A7E0-EF51830A8F15}.Release|Any CPU.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{45CB9EF7-988B-42AE-A205-C2807809CCEB} = {363C04C4-1C05-444B-950B-822160009582}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {2B2A567A-1F7C-4582-8A5C-4BAA09FA5FBD}
