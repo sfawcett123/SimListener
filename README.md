@@ -1,4 +1,7 @@
 # Flight Simulator Listener Library
+
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=sfawcett123_SimListener&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=sfawcett123_SimListener)
+
 ## Purpose
 This library provides a wrapper around the Microsoft.FlightSimulator.SimConnect library.
 
