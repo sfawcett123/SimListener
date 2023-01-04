@@ -76,7 +76,7 @@ jobs:
 
       - name: Create Nuget Package
         run: |
-             dotnet build -c Release -p:PackageVersion=${{ steps.tag_version.outputs.new_version }} 
+             dotnet build -c Release -p:Version=${{ steps.tag_version.outputs.new_version }} 
 
       - name: Upload Package for Publishing
         uses: actions/upload-artifact@v3
