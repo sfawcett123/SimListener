@@ -89,14 +89,12 @@ namespace SimListener
                 throw new ArgumentNullException(nameof(sender));
             }
 
-            Console.WriteLine($" Recieve Open {data}");
             _ = AddRequest("PLANE LATITUDE", "degrees", false);
             _ = AddRequest("PLANE LONGITUDE", "degrees", false);
             _ = AddRequest("AIRSPEED TRUE", "knots", false);
             _ = AddRequest("PLANE ALTITUDE", "feet", false);
             _ = AddRequest("PLANE HEADING DEGREES TRUE", "degrees", false);
 
-            Console.WriteLine("Connected to Flight Simulator");
 
             // Register pending requests
             if (lSimvarRequests != null)
@@ -270,13 +268,11 @@ namespace SimListener
                         if (!ReturnValue.ContainsKey(oSimvarRequest.Parameter))
                         {
                             ReturnValue.Add(oSimvarRequest.Parameter, "");
-                            Console.WriteLine($"Creating {oSimvarRequest.Parameter} ");
                         }
 
                         if (oSimvarRequest.Value is not null)
                         {
                             ReturnValue[oSimvarRequest.Parameter] = oSimvarRequest.Value;
-                            Console.WriteLine($"UPDATING {oSimvarRequest.Parameter} = {oSimvarRequest.Value} ");
                         }
                     }
 
@@ -349,7 +345,6 @@ namespace SimListener
             oSimvarRequest.bPending = !RegisterToSimConnect(oSimvarRequest);
             oSimvarRequest.bStillPending = oSimvarRequest.bPending;
 
-            Console.WriteLine($"Adding Request {_sNewSimvarRequest}");
             lSimvarRequests?.Add(oSimvarRequest);
 
             ++m_iCurrentDefinition;
