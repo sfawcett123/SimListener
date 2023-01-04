@@ -82,7 +82,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: PackedLib
-          path: SimListener/bin/Release/*.nupkg
+          path: SimListener/bin/x64/Release/*.nupkg
           
   github-publish:
     needs: package
