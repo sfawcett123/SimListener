@@ -2,7 +2,7 @@ name: Build/Test/Deploy
 on:
   push:
     branches:
-      - master
+      - main
   pull_request:
     types: [opened, synchronize, reopened]
 jobs:
@@ -48,7 +48,7 @@ jobs:
            
   package:
     name: Package
-    if: github.ref == 'refs/heads/master'
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     needs: [ test ]
     steps:
@@ -82,7 +82,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: PackedLib
-          path: SimListener/bin/Release/*.nupkg
+          path: SimListener/bin/x64/Release/*.nupkg
           
   github-publish:
     needs: package
