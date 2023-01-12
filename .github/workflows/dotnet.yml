@@ -39,7 +39,14 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-
+          
+      - name: Code Coverage Report
+        uses: codecov/codecov-action@v3
+        if: always()
+        with:
+          token: ${{ secrets.CODECOV }}
+          files: SimListenerTest/coverage.opencover.xml
+    
       - name: Publish Test Results
         uses: EnricoMi/publish-unit-test-result-action@v2
         if: always()
