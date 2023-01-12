@@ -40,7 +40,9 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           
-      - uses: codecov/codecov-action@v3
+      - name: Code Coverage Report
+        uses: codecov/codecov-action@v3
+        if: always()
         with:
           files: SimListenerTest/coverage.opencover.xml
     
