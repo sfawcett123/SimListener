@@ -2,6 +2,8 @@
 
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=sfawcett123_SimListener&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=sfawcett123_SimListener)
 
+[![codecov](https://codecov.io/gh/sfawcett123/SimListener/branch/main/graph/badge.svg?token=DJHHC5C60X)](https://codecov.io/gh/sfawcett123/SimListener)
+
 ## Purpose
 This library provides a wrapper around the Microsoft.FlightSimulator.SimConnect library.
 
