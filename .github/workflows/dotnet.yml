@@ -47,6 +47,22 @@ jobs:
           token: ${{ secrets.CODECOV }}
           files: SimListenerTest/coverage.opencover.xml
     
+      - name: Upload Results for Publishing
+        uses: actions/upload-artifact@v3
+        with:
+          name: Results
+          path: SimListenerTest/TestResults/*.trx
+  
+  results:
+    name: Results
+    runs-on: ubuntu-latest
+    needs: [ test ]
+    steps:
+      - name: Download built project  
+        uses: actions/download-artifact@v3
+        with:
+          name: Results
+        
       - name: Publish Test Results
         uses: EnricoMi/publish-unit-test-result-action@v2
         if: always()
