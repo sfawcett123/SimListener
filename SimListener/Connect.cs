@@ -185,7 +185,7 @@ namespace SimListener
                 }
             }
         }
-        public void ConnecttoSim()
+        public void ConnectToSim()
         {
             if (m_oSimConnect is null)
             {
@@ -319,6 +319,11 @@ namespace SimListener
         public ErrorCodes AddRequest(string _sNewSimvarRequest)
         {
             return AddRequest(_sNewSimvarRequest, "", true);
+        }
+
+        public int Count()
+        {
+            return lSimvarRequests.Count;
         }
         public ErrorCodes AddRequest(string _sNewSimvarRequest, string _sNewUnitRequest, bool _bIsString)
         {

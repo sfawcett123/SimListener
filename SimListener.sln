@@ -24,22 +24,21 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Sim\SimConnect.dll = Sim\SimConnect.dll
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimListenerTest", "SimListenerTest\SimListenerTest.csproj", "{E30EB48F-2AA3-4C46-82CF-68441A9900AE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimListenerTest", "SimListenerTest\SimListenerTest.csproj", "{E30EB48F-2AA3-4C46-82CF-68441A9900AE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
-		Debug|Any CPU = Debug|Any CPU
-		Release|Any CPU = Release|Any CPU
+		Debug|64 = Debug|64
+		Release|64 = Release|64
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{9EDBF513-ABF8-423E-A7E0-EF51830A8F15}.Debug|Any CPU.ActiveCfg = Debug|x64
-		{9EDBF513-ABF8-423E-A7E0-EF51830A8F15}.Debug|Any CPU.Build.0 = Debug|x64
-		{9EDBF513-ABF8-423E-A7E0-EF51830A8F15}.Release|Any CPU.ActiveCfg = Release|x64
-		{9EDBF513-ABF8-423E-A7E0-EF51830A8F15}.Release|Any CPU.Build.0 = Release|x64
-		{E30EB48F-2AA3-4C46-82CF-68441A9900AE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E30EB48F-2AA3-4C46-82CF-68441A9900AE}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E30EB48F-2AA3-4C46-82CF-68441A9900AE}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E30EB48F-2AA3-4C46-82CF-68441A9900AE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9EDBF513-ABF8-423E-A7E0-EF51830A8F15}.Debug|64.ActiveCfg = Debug|x64
+		{9EDBF513-ABF8-423E-A7E0-EF51830A8F15}.Debug|64.Build.0 = Debug|x64
+		{9EDBF513-ABF8-423E-A7E0-EF51830A8F15}.Release|64.ActiveCfg = Release|x64
+		{9EDBF513-ABF8-423E-A7E0-EF51830A8F15}.Release|64.Build.0 = Release|x64
+		{E30EB48F-2AA3-4C46-82CF-68441A9900AE}.Debug|64.ActiveCfg = Debug|x64
+		{E30EB48F-2AA3-4C46-82CF-68441A9900AE}.Debug|64.Build.0 = Debug|x64
+		{E30EB48F-2AA3-4C46-82CF-68441A9900AE}.Release|64.ActiveCfg = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

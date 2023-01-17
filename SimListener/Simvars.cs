@@ -2,7 +2,7 @@
 
 namespace SimListener
 {
-    internal class SimVars
+    public class SimVars
     {
         public static readonly string[] Names = new string[]
         {
