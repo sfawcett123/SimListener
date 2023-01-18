@@ -98,7 +98,7 @@ namespace SimListener
         }
         private void SimConnect_OnRecvEvent(SimConnect sender, SIMCONNECT_RECV_SYSTEM_STATE data)
         {
-            if ((REQUESTS)data.dwRequestID == REQUESTS.AIRCRAFT_LOADED)
+            if ((Requests)data.dwRequestID == Requests.AIRCRAFT_LOADED)
             {
                 AircaftLoaded = data.szString;
             }
@@ -181,7 +181,7 @@ namespace SimListener
                         m_oSimConnect.OnRecvSimobjectDataBytype += new SimConnect.RecvSimobjectDataBytypeEventHandler(SimConnect_OnRecvSimobjectDataBytype);
 
                         m_oSimConnect.OnRecvSystemState += new SimConnect.RecvSystemStateEventHandler(SimConnect_OnRecvEvent);
-                        m_oSimConnect.SubscribeToSystemEvent(EVENT.RECUR_1SEC, "1sec");
+                        m_oSimConnect.SubscribeToSystemEvent(Event.RECUR_1SEC, "1sec");
                     }
 
                 }
@@ -203,7 +203,7 @@ namespace SimListener
                 { "AircaftLoaded" ,  AircaftLoaded }
             };
 
-            m_oSimConnect?.RequestSystemState(REQUESTS.AIRCRAFT_LOADED, "AircraftLoaded");
+            m_oSimConnect?.RequestSystemState(Requests.AIRCRAFT_LOADED, "AircraftLoaded");
 
             if (lSimvarRequests != null)
             {
@@ -290,15 +290,15 @@ namespace SimListener
             }
             return "OK";
         }
+        public int Count()
+        {
+            return lSimvarRequests.Count;
+        }
         public ErrorCodes AddRequest(string _sNewSimvarRequest)
         {
             return AddRequest(_sNewSimvarRequest, "", true);
         }
 
-        public int Count()
-        {
-            return lSimvarRequests.Count;
-        }
         public ErrorCodes AddRequest(string _sNewSimvarRequest, string _sNewUnitRequest, bool _bIsString)
         {
             
@@ -309,8 +309,8 @@ namespace SimListener
 
             SimListener oSimvarRequest = new()
             {
-                eDef = (DEFINITION)m_iCurrentDefinition,
-                eRequest = (REQUEST)m_iCurrentRequest,
+                eDef = (Definition)m_iCurrentDefinition,
+                eRequest = (Request)m_iCurrentRequest,
                 Parameter = _sNewSimvarRequest,
                 bIsString = _bIsString,
                 Measure = _sNewUnitRequest
