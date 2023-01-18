@@ -197,49 +197,24 @@ namespace SimListener
         }
         public Dictionary<string, string> AircraftData()
         {
-            Track tempTrack = new();
-
             ReceiveSimConnectMessage();
 
             Dictionary<string, string> ReturnValue = new()
             {
                 { "Connected"     , Connected.ToString() },
-                { "AircaftLoaded" ,  AircaftLoaded }
+                { "AircaftLoaded" , AircaftLoaded }
             };
 
             m_oSimConnect?.RequestSystemState(Requests.AIRCRAFT_LOADED, "AircraftLoaded");
 
             if (lSimvarRequests != null)
             {
+                _TrackList.AddTrack( TrackList.ConstructTrack(lSimvarRequests)); 
+
                 foreach (SimListener oSimvarRequest in lSimvarRequests)
                 {
                     if (oSimvarRequest.Value is null)
                         continue;
-
-                    if (oSimvarRequest.Parameter == "PLANE LONGITUDE")
-                    {
-                        tempTrack.Longitude = oSimvarRequest.Value;
-                    }
-
-                    if (oSimvarRequest.Parameter == "PLANE LATITUDE")
-                    {
-                        tempTrack.Latitude = oSimvarRequest.Value;
-                    }
-
-                    if (oSimvarRequest.Parameter == "AIRSPEED TRUE")
-                    {
-                        tempTrack.Airspeed = oSimvarRequest.Value;
-                    }
-
-                    if (oSimvarRequest.Parameter == "PLANE ALTITUDE")
-                    {
-                        tempTrack.Altitude = oSimvarRequest.Value;
-                    }
-
-                    if (oSimvarRequest.Parameter == "PLANE HEADING DEGREES TRUE")
-                    {
-                        tempTrack.Heading = oSimvarRequest.Value;
-                    }
 
                     if (oSimvarRequest.Parameter is not null)
                     {
@@ -267,8 +242,6 @@ namespace SimListener
 
                 }
             }
-
-            _TrackList.AddTrack(tempTrack);
 
             return ReturnValue;
         }
