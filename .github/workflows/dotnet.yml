@@ -45,7 +45,9 @@ jobs:
         if: always()
         with:
           name: Results
-          path: SimListenerTest/TestResults/*.trx , SimListenerTest/coverage.opencover.xml
+          path: |
+                SimListenerTest/TestResults/*.trx 
+                SimListenerTest/coverage.opencover.xml
   
   results:
     name: Results
