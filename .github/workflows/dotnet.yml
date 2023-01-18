@@ -63,8 +63,10 @@ jobs:
         uses: actions/upload-artifact@v3
         if: always()
         with:
-          name: Results
-          path: SimListenerTest/TestResults/*.trx , SimListenerTest/coverage.opencover.xml
+          name: TestResults
+          path: |
+                SimListenerTest/TestResults/*.trx 
+                SimListenerTest/coverage.opencover.xml
   
   results:
     name: Results
@@ -75,7 +77,7 @@ jobs:
       - name: Download built project  
         uses: actions/download-artifact@v3
         with:
-          name: Results
+          name: TestResults
         
       - name: Publish Test Results
         uses: EnricoMi/publish-unit-test-result-action@v2
