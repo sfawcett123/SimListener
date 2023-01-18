@@ -34,7 +34,7 @@ namespace SimListener
         private ErrorCodes pAddRequest(string _sNewSimvarRequest, string _sNewUnitRequest, bool _bIsString)
         {
 
-            if (ValidateRequest(_sNewSimvarRequest) == false)
+            if (!ValidateRequest(_sNewSimvarRequest))
             {
                 return ErrorCodes.INVALID_DATA_REQUEST;
             }
