@@ -17,7 +17,6 @@ namespace SimListener
     {
         #region Public
         public bool Connected => m_oSimConnect is not null;
-
         #endregion
 
         #region Private
@@ -32,6 +31,38 @@ namespace SimListener
         #endregion Private
 
         #region Private Methods
+        private ErrorCodes pAddRequest(string _sNewSimvarRequest, string _sNewUnitRequest, bool _bIsString)
+        {
+
+            if (ValidateRequest(_sNewSimvarRequest) == false)
+            {
+                return ErrorCodes.INVALID_DATA_REQUEST;
+            }
+
+            SimListener oSimvarRequest = new()
+            {
+                eDef = (Definition)m_iCurrentDefinition,
+                eRequest = (Request)m_iCurrentRequest,
+                Parameter = _sNewSimvarRequest,
+                bIsString = _bIsString,
+                Measure = _sNewUnitRequest
+            };
+
+            if (lSimvarRequests.Contains<SimListener>(oSimvarRequest))
+            {
+                return ErrorCodes.OK;
+            }
+
+            oSimvarRequest.bPending = !RegisterToSimConnect(oSimvarRequest);
+            oSimvarRequest.bStillPending = oSimvarRequest.bPending;
+
+            lSimvarRequests?.Add(oSimvarRequest);
+
+            ++m_iCurrentDefinition;
+            ++m_iCurrentRequest;
+
+            return ErrorCodes.OK;
+        }
         private void ReceiveSimConnectMessage()
         {
             m_oSimConnect?.ReceiveMessage();
@@ -67,11 +98,11 @@ namespace SimListener
                 throw new ArgumentNullException(nameof(sender));
             }
 
-            _ = AddRequest("PLANE LATITUDE", "degrees", false);
-            _ = AddRequest("PLANE LONGITUDE", "degrees", false);
-            _ = AddRequest("AIRSPEED TRUE", "knots", false);
-            _ = AddRequest("PLANE ALTITUDE", "feet", false);
-            _ = AddRequest("PLANE HEADING DEGREES TRUE", "degrees", false);
+            _ = pAddRequest("PLANE LATITUDE", "degrees", false);
+            _ = pAddRequest("PLANE LONGITUDE", "degrees", false);
+            _ = pAddRequest("AIRSPEED TRUE", "knots", false);
+            _ = pAddRequest("PLANE ALTITUDE", "feet", false);
+            _ = pAddRequest("PLANE HEADING DEGREES TRUE", "degrees", false);
 
 
             // Register pending requests
@@ -145,24 +176,9 @@ namespace SimListener
                 }
             }
         }
-
         #endregion
 
         #region Public Methods
-        public void Disconnect()
-        {
-            m_oSimConnect?.Dispose();
-
-            // Set all requests as pending
-            if (lSimvarRequests != null)
-            {
-                foreach (SimListener oSimvarRequest in lSimvarRequests)
-                {
-                    oSimvarRequest.bPending = true;
-                    oSimvarRequest.bStillPending = true;
-                }
-            }
-        }
         public void ConnectToSim()
         {
             if (m_oSimConnect is null)
@@ -192,6 +208,20 @@ namespace SimListener
                 catch (COMException)
                 {
 
+                }
+            }
+        }
+        public void Disconnect()
+        {
+            m_oSimConnect?.Dispose();
+
+            // Set all requests as pending
+            if (lSimvarRequests != null)
+            {
+                foreach (SimListener oSimvarRequest in lSimvarRequests)
+                {
+                    oSimvarRequest.bPending = true;
+                    oSimvarRequest.bStillPending = true;
                 }
             }
         }
@@ -249,6 +279,10 @@ namespace SimListener
         {
             return _TrackList.List();
         }
+        public ErrorCodes AddRequest(string _sNewSimvarRequest)
+        {
+            return pAddRequest(_sNewSimvarRequest, "", true);
+        }
         public string AddRequests(List<string> Outputs)
         {
             if (Outputs is not null)
@@ -267,57 +301,7 @@ namespace SimListener
             }
             return "OK";
         }
-        /// <summary>The total number of requests.</summary>
-        /// <returns>System.Int32.</returns>
-        public int NumberOfRequests()
-        {
-            return lSimvarRequests.Count;
-        }
-
-        /// <summary>Adds a request.</summary>
-        /// <param name="_sNewSimvarRequest">The requested data</param>
-        /// <returns>ErrorCodes.</returns>
-        public ErrorCodes AddRequest(string _sNewSimvarRequest)
-        {
-            return AddRequest(_sNewSimvarRequest, "", true);
-        }
-        private ErrorCodes AddRequest(string _sNewSimvarRequest, string _sNewUnitRequest, bool _bIsString)
-        {
-            
-            if (Validate(_sNewSimvarRequest) == false)
-            {
-                return ErrorCodes.INVALID_DATA_REQUEST;
-            }
-
-            SimListener oSimvarRequest = new()
-            {
-                eDef = (Definition)m_iCurrentDefinition,
-                eRequest = (Request)m_iCurrentRequest,
-                Parameter = _sNewSimvarRequest,
-                bIsString = _bIsString,
-                Measure = _sNewUnitRequest
-            };
-
-            if (lSimvarRequests.Contains<SimListener>(oSimvarRequest))
-            {
-                return ErrorCodes.OK;
-            }
-
-            oSimvarRequest.bPending = !RegisterToSimConnect(oSimvarRequest);
-            oSimvarRequest.bStillPending = oSimvarRequest.bPending;
-
-            lSimvarRequests?.Add(oSimvarRequest);
-
-            ++m_iCurrentDefinition;
-            ++m_iCurrentRequest;
-
-            return ErrorCodes.OK;
-        }
-        /// <summary>Validates the specified request.</summary>
-        /// <param name="request">The request.</param>
-        /// <returns>
-        ///   <c>true</c> if valid request, <c>false</c> otherwise.</returns>
-        private static bool Validate(string request)
+        private static bool ValidateRequest(string request)
         {
             return request != null && SimVars.Names.Contains(request);
         }

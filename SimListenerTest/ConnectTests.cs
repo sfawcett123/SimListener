@@ -41,8 +41,6 @@ namespace SimListener.Tests
             string answer = cnx.AddRequests(SimVars.Names.ToList<string>());
 
             Assert.AreEqual("OK", answer);
-
-            Assert.AreEqual(SimVars.Names.ToList<string>().Count, cnx.NumberOfRequests());
         }
 
         [TestMethod()]
