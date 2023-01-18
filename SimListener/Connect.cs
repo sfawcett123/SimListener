@@ -17,7 +17,6 @@ namespace SimListener
     {
         #region Public
         public bool Connected => m_oSimConnect is not null;
-
         #endregion
 
         #region Private
@@ -32,6 +31,38 @@ namespace SimListener
         #endregion Private
 
         #region Private Methods
+        private ErrorCodes pAddRequest(string _sNewSimvarRequest, string _sNewUnitRequest, bool _bIsString)
+        {
+
+            if (!ValidateRequest(_sNewSimvarRequest))
+            {
+                return ErrorCodes.INVALID_DATA_REQUEST;
+            }
+
+            SimListener oSimvarRequest = new()
+            {
+                eDef = (Definition)m_iCurrentDefinition,
+                eRequest = (Request)m_iCurrentRequest,
+                Parameter = _sNewSimvarRequest,
+                bIsString = _bIsString,
+                Measure = _sNewUnitRequest
+            };
+
+            if (lSimvarRequests.Contains<SimListener>(oSimvarRequest))
+            {
+                return ErrorCodes.OK;
+            }
+
+            oSimvarRequest.bPending = !RegisterToSimConnect(oSimvarRequest);
+            oSimvarRequest.bStillPending = oSimvarRequest.bPending;
+
+            lSimvarRequests?.Add(oSimvarRequest);
+
+            ++m_iCurrentDefinition;
+            ++m_iCurrentRequest;
+
+            return ErrorCodes.OK;
+        }
         private void ReceiveSimConnectMessage()
         {
             m_oSimConnect?.ReceiveMessage();
@@ -67,11 +98,11 @@ namespace SimListener
                 throw new ArgumentNullException(nameof(sender));
             }
 
-            _ = AddRequest("PLANE LATITUDE", "degrees", false);
-            _ = AddRequest("PLANE LONGITUDE", "degrees", false);
-            _ = AddRequest("AIRSPEED TRUE", "knots", false);
-            _ = AddRequest("PLANE ALTITUDE", "feet", false);
-            _ = AddRequest("PLANE HEADING DEGREES TRUE", "degrees", false);
+            _ = pAddRequest("PLANE LATITUDE", "degrees", false);
+            _ = pAddRequest("PLANE LONGITUDE", "degrees", false);
+            _ = pAddRequest("AIRSPEED TRUE", "knots", false);
+            _ = pAddRequest("PLANE ALTITUDE", "feet", false);
+            _ = pAddRequest("PLANE HEADING DEGREES TRUE", "degrees", false);
 
 
             // Register pending requests
@@ -98,7 +129,7 @@ namespace SimListener
         }
         private void SimConnect_OnRecvEvent(SimConnect sender, SIMCONNECT_RECV_SYSTEM_STATE data)
         {
-            if ((REQUESTS)data.dwRequestID == REQUESTS.AIRCRAFT_LOADED)
+            if ((Requests)data.dwRequestID == Requests.AIRCRAFT_LOADED)
             {
                 AircaftLoaded = data.szString;
             }
@@ -145,24 +176,9 @@ namespace SimListener
                 }
             }
         }
-
         #endregion
 
         #region Public Methods
-        public void Disconnect()
-        {
-            m_oSimConnect?.Dispose();
-
-            // Set all requests as pending
-            if (lSimvarRequests != null)
-            {
-                foreach (SimListener oSimvarRequest in lSimvarRequests)
-                {
-                    oSimvarRequest.bPending = true;
-                    oSimvarRequest.bStillPending = true;
-                }
-            }
-        }
         public void ConnectToSim()
         {
             if (m_oSimConnect is null)
@@ -185,7 +201,7 @@ namespace SimListener
                         m_oSimConnect.OnRecvSimobjectDataBytype += new SimConnect.RecvSimobjectDataBytypeEventHandler(SimConnect_OnRecvSimobjectDataBytype);
 
                         m_oSimConnect.OnRecvSystemState += new SimConnect.RecvSystemStateEventHandler(SimConnect_OnRecvEvent);
-                        m_oSimConnect.SubscribeToSystemEvent(EVENT.RECUR_1SEC, "1sec");
+                        m_oSimConnect.SubscribeToSystemEvent(Event.RECUR_1SEC, "1sec");
                     }
 
                 }
@@ -195,51 +211,40 @@ namespace SimListener
                 }
             }
         }
+        public void Disconnect()
+        {
+            m_oSimConnect?.Dispose();
+
+            // Set all requests as pending
+            if (lSimvarRequests != null)
+            {
+                foreach (SimListener oSimvarRequest in lSimvarRequests)
+                {
+                    oSimvarRequest.bPending = true;
+                    oSimvarRequest.bStillPending = true;
+                }
+            }
+        }
         public Dictionary<string, string> AircraftData()
         {
-            Track tempTrack = new();
-
             ReceiveSimConnectMessage();
 
             Dictionary<string, string> ReturnValue = new()
             {
                 { "Connected"     , Connected.ToString() },
-                { "AircaftLoaded" ,  AircaftLoaded }
+                { "AircaftLoaded" , AircaftLoaded }
             };
 
-            m_oSimConnect?.RequestSystemState(REQUESTS.AIRCRAFT_LOADED, "AircraftLoaded");
+            m_oSimConnect?.RequestSystemState(Requests.AIRCRAFT_LOADED, "AircraftLoaded");
 
             if (lSimvarRequests != null)
             {
+                _TrackList.AddTrack( TrackList.ConstructTrack(lSimvarRequests)); 
+
                 foreach (SimListener oSimvarRequest in lSimvarRequests)
                 {
                     if (oSimvarRequest.Value is null)
                         continue;
-
-                    if (oSimvarRequest.Parameter == "PLANE LONGITUDE")
-                    {
-                        tempTrack.Longitude = oSimvarRequest.Value;
-                    }
-
-                    if (oSimvarRequest.Parameter == "PLANE LATITUDE")
-                    {
-                        tempTrack.Latitude = oSimvarRequest.Value;
-                    }
-
-                    if (oSimvarRequest.Parameter == "AIRSPEED TRUE")
-                    {
-                        tempTrack.Airspeed = oSimvarRequest.Value;
-                    }
-
-                    if (oSimvarRequest.Parameter == "PLANE ALTITUDE")
-                    {
-                        tempTrack.Altitude = oSimvarRequest.Value;
-                    }
-
-                    if (oSimvarRequest.Parameter == "PLANE HEADING DEGREES TRUE")
-                    {
-                        tempTrack.Heading = oSimvarRequest.Value;
-                    }
 
                     if (oSimvarRequest.Parameter is not null)
                     {
@@ -268,13 +273,15 @@ namespace SimListener
                 }
             }
 
-            _TrackList.AddTrack(tempTrack);
-
             return ReturnValue;
         }
         public List<Track> TrackData()
         {
             return _TrackList.List();
+        }
+        public ErrorCodes AddRequest(string _sNewSimvarRequest)
+        {
+            return pAddRequest(_sNewSimvarRequest, "", true);
         }
         public string AddRequests(List<string> Outputs)
         {
@@ -294,54 +301,14 @@ namespace SimListener
             }
             return "OK";
         }
-        public ErrorCodes AddRequest(string _sNewSimvarRequest)
-        {
-            return AddRequest(_sNewSimvarRequest, "", true);
-        }
-
-        public int Count()
-        {
-            return lSimvarRequests.Count;
-        }
-        public ErrorCodes AddRequest(string _sNewSimvarRequest, string _sNewUnitRequest, bool _bIsString)
-        {
-            
-            if (Validate(_sNewSimvarRequest) == false)
-            {
-                return ErrorCodes.INVALID_DATA_REQUEST;
-            }
-
-            SimListener oSimvarRequest = new()
-            {
-                eDef = (DEFINITION)m_iCurrentDefinition,
-                eRequest = (REQUEST)m_iCurrentRequest,
-                Parameter = _sNewSimvarRequest,
-                bIsString = _bIsString,
-                Measure = _sNewUnitRequest
-            };
-
-            if (lSimvarRequests.Contains<SimListener>(oSimvarRequest))
-            {
-                return ErrorCodes.OK;
-            }
-
-            oSimvarRequest.bPending = !RegisterToSimConnect(oSimvarRequest);
-            oSimvarRequest.bStillPending = oSimvarRequest.bPending;
-
-            lSimvarRequests?.Add(oSimvarRequest);
-
-            ++m_iCurrentDefinition;
-            ++m_iCurrentRequest;
-
-            return ErrorCodes.OK;
-        }
-        private static bool Validate(string request)
+        private static bool ValidateRequest(string request)
         {
             return request != null && SimVars.Names.Contains(request);
         }
         #endregion
 
         #region Constructor
+        /// <summary>Initializes a new instance of the <see cref="T:SimListener.Connect" /> class.</summary>
         public Connect()
         {
             lObjectIDs = new ObservableCollection<uint>

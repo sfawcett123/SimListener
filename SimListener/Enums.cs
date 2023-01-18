@@ -5,20 +5,20 @@
         OK,
         INVALID_DATA_REQUEST,
     }
-    internal enum DEFINITION
+    internal enum Definition
     {
         Dummy = 0
     };
-    internal enum REQUEST
+    internal enum Request
     {
         Dummy = 0,
         Struct1
     };
-    internal enum EVENT
+    internal enum Event
     {
         RECUR_1SEC,
     }
-    internal enum REQUESTS
+    internal enum Requests
     {
         SIMULATION,
         AIRCRAFT_LOADED,
