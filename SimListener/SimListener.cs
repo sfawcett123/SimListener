@@ -3,8 +3,8 @@ namespace SimListener
 {
     internal class SimListener : IEquatable<SimListener?>
     {
-        public DEFINITION eDef = DEFINITION.Dummy;
-        public REQUEST eRequest = REQUEST.Dummy;
+        public Definition eDef = Definition.Dummy;
+        public Request eRequest = Request.Dummy;
         public string? Parameter { get; set; }
         public string? Measure { get; set; }
         public bool bIsString = false;
