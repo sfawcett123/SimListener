@@ -4,6 +4,7 @@ namespace SimListener
 {
     public class SimVars
     {
+        /// <summary>List of valid request types</summary>
         public static readonly string[] Names = new string[]
         {
             "NONE",
@@ -1322,6 +1323,8 @@ namespace SimListener
             "ZERO LIFT ALPHA",
         };
 
+        /// <summary>The default units
+        /// ( Feet, Degrees etc)</summary>
         public static readonly string[] DefaultUnits = new string[]
         {
             "",

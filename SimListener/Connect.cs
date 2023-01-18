@@ -294,16 +294,21 @@ namespace SimListener
             }
             return "OK";
         }
+        /// <summary>The total number of requests.</summary>
+        /// <returns>System.Int32.</returns>
+        public int NumberOfRequests()
+        {
+            return lSimvarRequests.Count;
+        }
+
+        /// <summary>Adds a request.</summary>
+        /// <param name="_sNewSimvarRequest">The requested data</param>
+        /// <returns>ErrorCodes.</returns>
         public ErrorCodes AddRequest(string _sNewSimvarRequest)
         {
             return AddRequest(_sNewSimvarRequest, "", true);
         }
-
-        public int Count()
-        {
-            return lSimvarRequests.Count;
-        }
-        public ErrorCodes AddRequest(string _sNewSimvarRequest, string _sNewUnitRequest, bool _bIsString)
+        private ErrorCodes AddRequest(string _sNewSimvarRequest, string _sNewUnitRequest, bool _bIsString)
         {
             
             if (Validate(_sNewSimvarRequest) == false)
@@ -335,6 +340,10 @@ namespace SimListener
 
             return ErrorCodes.OK;
         }
+        /// <summary>Validates the specified request.</summary>
+        /// <param name="request">The request.</param>
+        /// <returns>
+        ///   <c>true</c> if valid request, <c>false</c> otherwise.</returns>
         private static bool Validate(string request)
         {
             return request != null && SimVars.Names.Contains(request);
@@ -342,6 +351,7 @@ namespace SimListener
         #endregion
 
         #region Constructor
+        /// <summary>Initializes a new instance of the <see cref="T:SimListener.Connect" /> class.</summary>
         public Connect()
         {
             lObjectIDs = new ObservableCollection<uint>

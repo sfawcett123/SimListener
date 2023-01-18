@@ -42,7 +42,7 @@ namespace SimListener.Tests
 
             Assert.AreEqual("OK", answer);
 
-            Assert.AreEqual(SimVars.Names.ToList<string>().Count(), cnx.Count());
+            Assert.AreEqual(SimVars.Names.ToList<string>().Count, cnx.NumberOfRequests());
         }
 
         [TestMethod()]

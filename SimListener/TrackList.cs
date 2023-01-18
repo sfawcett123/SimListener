@@ -6,21 +6,15 @@
         {
             return this;
         }
-        public void AddTrack(Track _point)
+        public void AddTrack(Track newpoint)
         {
             if (Count > 0)
             {
-                if (this.Last().Equals(_point) == false)
-                {
-                    Add(_point);
-                }
-                else
-                if (_point.Zero() == false)
-                {
-                    Add(_point);
-                }
+                // If the last point added isnt the same as this new point then
+                // if the newpoint isnt a zero point then add it to the list
+                if ( !this.Last().Equals(newpoint) && !newpoint.Zero() ) 
+                    Add(newpoint);
             }
         }
-
     }
 }

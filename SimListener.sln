@@ -26,19 +26,56 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimListenerTest", "SimListenerTest\SimListenerTest.csproj", "{E30EB48F-2AA3-4C46-82CF-68441A9900AE}"
 EndProject
+Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "Help", "Help\", "{68CA627D-2F2D-4AD4-A91F-1C80A6146B39}"
+	ProjectSection(WebsiteProperties) = preProject
+		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.8"
+		Debug.AspNetCompiler.VirtualPath = "/localhost_13533"
+		Debug.AspNetCompiler.PhysicalPath = "Help\"
+		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_13533\"
+		Debug.AspNetCompiler.Updateable = "true"
+		Debug.AspNetCompiler.ForceOverwrite = "true"
+		Debug.AspNetCompiler.FixedNames = "false"
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.VirtualPath = "/localhost_13533"
+		Release.AspNetCompiler.PhysicalPath = "Help\"
+		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_13533\"
+		Release.AspNetCompiler.Updateable = "true"
+		Release.AspNetCompiler.ForceOverwrite = "true"
+		Release.AspNetCompiler.FixedNames = "false"
+		Release.AspNetCompiler.Debug = "False"
+		VWDPort = "13533"
+		SlnRelativePath = "Help\"
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|64 = Debug|64
+		Debug|Any CPU = Debug|Any CPU
 		Release|64 = Release|64
+		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{9EDBF513-ABF8-423E-A7E0-EF51830A8F15}.Debug|64.ActiveCfg = Debug|x64
 		{9EDBF513-ABF8-423E-A7E0-EF51830A8F15}.Debug|64.Build.0 = Debug|x64
+		{9EDBF513-ABF8-423E-A7E0-EF51830A8F15}.Debug|Any CPU.ActiveCfg = Debug|x64
+		{9EDBF513-ABF8-423E-A7E0-EF51830A8F15}.Debug|Any CPU.Build.0 = Debug|x64
 		{9EDBF513-ABF8-423E-A7E0-EF51830A8F15}.Release|64.ActiveCfg = Release|x64
 		{9EDBF513-ABF8-423E-A7E0-EF51830A8F15}.Release|64.Build.0 = Release|x64
+		{9EDBF513-ABF8-423E-A7E0-EF51830A8F15}.Release|Any CPU.ActiveCfg = Release|x64
+		{9EDBF513-ABF8-423E-A7E0-EF51830A8F15}.Release|Any CPU.Build.0 = Release|x64
 		{E30EB48F-2AA3-4C46-82CF-68441A9900AE}.Debug|64.ActiveCfg = Debug|x64
 		{E30EB48F-2AA3-4C46-82CF-68441A9900AE}.Debug|64.Build.0 = Debug|x64
+		{E30EB48F-2AA3-4C46-82CF-68441A9900AE}.Debug|Any CPU.ActiveCfg = Debug|x64
+		{E30EB48F-2AA3-4C46-82CF-68441A9900AE}.Debug|Any CPU.Build.0 = Debug|x64
 		{E30EB48F-2AA3-4C46-82CF-68441A9900AE}.Release|64.ActiveCfg = Release|x64
+		{E30EB48F-2AA3-4C46-82CF-68441A9900AE}.Release|Any CPU.ActiveCfg = Release|x64
+		{E30EB48F-2AA3-4C46-82CF-68441A9900AE}.Release|Any CPU.Build.0 = Release|x64
+		{68CA627D-2F2D-4AD4-A91F-1C80A6146B39}.Debug|64.ActiveCfg = Debug|Any CPU
+		{68CA627D-2F2D-4AD4-A91F-1C80A6146B39}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{68CA627D-2F2D-4AD4-A91F-1C80A6146B39}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{68CA627D-2F2D-4AD4-A91F-1C80A6146B39}.Release|64.ActiveCfg = Debug|Any CPU
+		{68CA627D-2F2D-4AD4-A91F-1C80A6146B39}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{68CA627D-2F2D-4AD4-A91F-1C80A6146B39}.Release|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
