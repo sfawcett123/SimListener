@@ -6,33 +6,11 @@ using System.Runtime.InteropServices;
 
 namespace SimListener
 {
-    internal enum DEFINITION
-    {
-        Dummy = 0
-    };
-    internal enum REQUEST
-    {
-        Dummy = 0,
-        Struct1
-    };
-    internal enum EVENT
-    {
-        RECUR_1SEC,
-    }
-    internal enum REQUESTS
-    {
-        SIMULATION,
-        AIRCRAFT_LOADED,
-    }
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi, Pack = 1)]
     internal struct ResultStructure
     {
-        // this is how you declare a fixed size string
         [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 256)]
         public string sValue;
-
-        // other definitions can be added to this struct
-        // ...
     };
 
     public class Connect

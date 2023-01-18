@@ -39,23 +39,18 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          
-      - name: Code Coverage Report
-        uses: codecov/codecov-action@v3
-        if: always()
-        with:
-          token: ${{ secrets.CODECOV }}
-          files: SimListenerTest/coverage.opencover.xml
-    
+              
       - name: Upload Results for Publishing
         uses: actions/upload-artifact@v3
+        if: always()
         with:
           name: Results
-          path: SimListenerTest/TestResults/*.trx
+          path: SimListenerTest/TestResults/*.trx , SimListenerTest/coverage.opencover.xml
   
   results:
     name: Results
     runs-on: ubuntu-latest
+    if: always()
     needs: [ test ]
     steps:
       - name: Download built project  
@@ -67,7 +62,14 @@ jobs:
         uses: EnricoMi/publish-unit-test-result-action@v2
         with:
            trx_files: "*.trx"
-           
+
+      - name: Code Coverage Report
+        uses: codecov/codecov-action@v3
+        if: always()
+        with:
+          token: ${{ secrets.CODECOV }}
+          files: coverage.opencover.xml
+          
   package:
     name: Package
     if: github.ref == 'refs/heads/main'
