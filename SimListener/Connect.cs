@@ -94,7 +94,7 @@ namespace SimListener
         }
         private void SimConnect_OnRecvException(SimConnect sender, SIMCONNECT_RECV_EXCEPTION data)
         {
-            // throw new Exception( data.dwException.ToString() );
+            Console.WriteLine("Recieve Exception ignored");
         }
         private void SimConnect_OnRecvEvent(SimConnect sender, SIMCONNECT_RECV_SYSTEM_STATE data)
         {
@@ -102,6 +102,16 @@ namespace SimListener
             {
                 AircaftLoaded = data.szString;
             }
+        }
+        private string ParseData(SIMCONNECT_RECV_SIMOBJECT_DATA_BYTYPE data , bool isString)
+        {
+            if (isString)
+            {
+                ResultStructure result = (ResultStructure)data.dwData[0];
+                return result.sValue;
+            }
+
+            return ((double)data.dwData[0]).ToString();
         }
         private void SimConnect_OnRecvSimobjectDataBytype(SimConnect sender, SIMCONNECT_RECV_SIMOBJECT_DATA_BYTYPE data)
         {
@@ -111,33 +121,19 @@ namespace SimListener
 
             if (iObject == 1)
             {
-                if (lObjectIDs != null)
-                {
-                    if (!lObjectIDs.Contains(iObject))
-                    {
-                        lObjectIDs.Add(iObject);
-                    }
+                // If the object hasn't been seen before add it.
+                if (lObjectIDs != null && !lObjectIDs.Contains(iObject))
+                { 
+                   lObjectIDs.Add(iObject);
                 }
 
                 if (lSimvarRequests != null)
                 {
                     foreach (SimListener oSimvarRequest in lSimvarRequests)
                     {
-
                         if (iRequest == (uint)oSimvarRequest.eRequest)
                         {
-                            if (oSimvarRequest.bIsString)
-                            {
-                                ResultStructure result = (ResultStructure)data.dwData[0];
-
-                                oSimvarRequest.Value = result.sValue;
-                            }
-                            else
-                            {
-                                oSimvarRequest.Value = ((double)data.dwData[0]).ToString();
-
-                            }
-
+                            oSimvarRequest.Value = ParseData(data, oSimvarRequest.bIsString);
                             oSimvarRequest.bPending = false;
                             oSimvarRequest.bStillPending = false;
                         }
@@ -191,7 +187,7 @@ namespace SimListener
                 }
                 catch (COMException)
                 {
-
+                    Console.WriteLine("Ignoring Sim Connect COMException");
                 }
             }
         }
