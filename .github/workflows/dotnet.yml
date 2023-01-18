@@ -54,7 +54,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run:  |
-                .\.sonar\scanner\dotnet-sonarscanner begin /k:"sfawcett123_SimListener" /o:"sfawcett123" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.opencover.reportsPaths="SimListenerTest/coverage.opencover.xml" /d:sonar.cs.vstest.reportsPaths="SimListenerTest/TestResults/*.trx"
+                .\.sonar\scanner\dotnet-sonarscanner begin /k:"sfawcett123_SimListener" /o:"sfawcett" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.opencover.reportsPaths="SimListenerTest/coverage.opencover.xml" /d:sonar.cs.vstest.reportsPaths="SimListenerTest/TestResults/*.trx"
                 dotnet build --no-incremental --nologo 
                 dotnet test --no-build --logger:trx  -e:CollectCoverage=true -e:CoverletOutputFormat=opencover
                 .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
