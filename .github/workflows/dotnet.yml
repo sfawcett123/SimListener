@@ -23,7 +23,6 @@ jobs:
         APP_LOCN: SimListener
         TEST_LOCN: SimListenerTest
       secrets:
-         GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
          CODECOV: ${{ secrets.CODECOV }}
          NUGET_API_KEY: ${{secrets.NUGET_API_KEY}}
