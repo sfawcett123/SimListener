@@ -15,7 +15,7 @@ namespace SimListener.Tests
         [TestMethod()]
         public void AddRequestsTest1()
         {
-            Connect cnx = new Connect();
+            Connect cnx = new();
 
             ErrorCodes answer = cnx.AddRequest("SHOULD FAIL");
             Assert.AreEqual(ErrorCodes.INVALID_DATA_REQUEST, answer);
@@ -24,7 +24,7 @@ namespace SimListener.Tests
         [TestMethod()]
         public void AddRequestsTest2()
         {
-            Connect cnx = new Connect();
+            Connect cnx = new();
 
             foreach (string name in SimVars.Names)
             {
@@ -36,7 +36,7 @@ namespace SimListener.Tests
         [TestMethod()]
         public void AddRequestsTest3()
         {
-            Connect cnx = new Connect();
+            Connect cnx = new();
 
             string answer = cnx.AddRequests(SimVars.Names.ToList<string>());
 
@@ -46,13 +46,32 @@ namespace SimListener.Tests
         [TestMethod()]
         public void AddRequestsTest4()
         {
-            Connect cnx = new Connect();
+            Connect cnx = new();
 
-            List<string> Test = new List<string>() { "WONT WORK" };
+            List<string> Test = new() { "WONT WORK" };
 
             string answer = cnx.AddRequests(Test);
 
             Assert.AreEqual("WONT WORK", answer);
+        }
+
+        [TestMethod()]
+        public void AddRequestsTest5()
+        {
+            Connect cnx = new();
+
+            KeyValuePair<string, string> Data = new KeyValuePair<string, string>("PLANE ALTITUDE", "");
+
+            List<string> Test = new() { Data.Key };
+
+            string answer = cnx.AddRequests(Test);
+
+            foreach( var req in cnx.AircraftData() )
+            {
+                Console.WriteLine( $"OUTPUT -> {req}" );
+            }
+
+            Assert.IsTrue(  cnx.AircraftData().Contains( Data ) );
         }
     }
 }
