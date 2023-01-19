@@ -31,7 +31,7 @@ namespace SimListener
         #endregion Private
 
         #region Private Methods
-        private ErrorCodes pAddRequest(string _sNewSimvarRequest, string _sNewUnitRequest, bool _bIsString)
+        private ErrorCodes InternalAddRequest(string _sNewSimvarRequest, string _sNewUnitRequest, bool _bIsString)
         {
 
             if (!ValidateRequest(_sNewSimvarRequest))
@@ -98,11 +98,11 @@ namespace SimListener
                 throw new ArgumentNullException(nameof(sender));
             }
 
-            _ = pAddRequest("PLANE LATITUDE", "degrees", false);
-            _ = pAddRequest("PLANE LONGITUDE", "degrees", false);
-            _ = pAddRequest("AIRSPEED TRUE", "knots", false);
-            _ = pAddRequest("PLANE ALTITUDE", "feet", false);
-            _ = pAddRequest("PLANE HEADING DEGREES TRUE", "degrees", false);
+            _ = InternalAddRequest("PLANE LATITUDE", "degrees", false);
+            _ = InternalAddRequest("PLANE LONGITUDE", "degrees", false);
+            _ = InternalAddRequest("AIRSPEED TRUE", "knots", false);
+            _ = InternalAddRequest("PLANE ALTITUDE", "feet", false);
+            _ = InternalAddRequest("PLANE HEADING DEGREES TRUE", "degrees", false);
 
 
             // Register pending requests
@@ -243,9 +243,6 @@ namespace SimListener
 
                 foreach (SimListener oSimvarRequest in lSimvarRequests)
                 {
-                    if (oSimvarRequest.Value is null)
-                        continue;
-
                     if (oSimvarRequest.Parameter is not null)
                     {
                         if (!ReturnValue.ContainsKey(oSimvarRequest.Parameter))
@@ -281,7 +278,7 @@ namespace SimListener
         }
         public ErrorCodes AddRequest(string _sNewSimvarRequest)
         {
-            return pAddRequest(_sNewSimvarRequest, "", true);
+            return InternalAddRequest(_sNewSimvarRequest, "", true);
         }
         public string AddRequests(List<string> Outputs)
         {
