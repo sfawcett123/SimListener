@@ -36,6 +36,7 @@ namespace SimListener
 
             if (!ValidateRequest(_sNewSimvarRequest))
             {
+                Console.WriteLine($"Request is not valid -> {_sNewSimvarRequest}");
                 return ErrorCodes.INVALID_DATA_REQUEST;
             }
 
@@ -50,6 +51,7 @@ namespace SimListener
 
             if (lSimvarRequests.Contains<SimListener>(oSimvarRequest))
             {
+                Console.WriteLine($"Request already exists -> {oSimvarRequest}");
                 return ErrorCodes.OK;
             }
 
@@ -65,9 +67,15 @@ namespace SimListener
         }
         private void ReceiveSimConnectMessage()
         {
-            m_oSimConnect?.ReceiveMessage();
+            try
+            {
+                m_oSimConnect?.ReceiveMessage();
+            }
+            catch { 
+                m_oSimConnect= null;
+            }
+            
         }
-
         private bool RegisterToSimConnect(SimListener _oSimvarRequest)
         {
             if (m_oSimConnect != null)
@@ -90,7 +98,6 @@ namespace SimListener
                 return false;
             }
         }
-
         private void SimConnect_OnRecvOpen(SimConnect sender, SIMCONNECT_RECV_OPEN data)
         {
             if (sender is null)
@@ -120,12 +127,11 @@ namespace SimListener
         }
         private void SimConnect_OnRecvQuit(SimConnect sender, SIMCONNECT_RECV data)
         {
-            Disconnect();
-            m_oSimConnect?.Dispose();
+            m_oSimConnect = null;
         }
         private void SimConnect_OnRecvException(SimConnect sender, SIMCONNECT_RECV_EXCEPTION data)
         {
-            // throw new Exception( data.dwException.ToString() );
+            m_oSimConnect = null;
         }
         private void SimConnect_OnRecvEvent(SimConnect sender, SIMCONNECT_RECV_SYSTEM_STATE data)
         {
@@ -193,14 +199,10 @@ namespace SimListener
                         /// Listen to connect and quit msgs
                         m_oSimConnect.OnRecvOpen += new SimConnect.RecvOpenEventHandler(SimConnect_OnRecvOpen);
                         m_oSimConnect.OnRecvQuit += new SimConnect.RecvQuitEventHandler(SimConnect_OnRecvQuit);
-
-                        /// Listen to exceptions
                         m_oSimConnect.OnRecvException += new SimConnect.RecvExceptionEventHandler(SimConnect_OnRecvException);
-
-                        /// Catch a simobject data request
                         m_oSimConnect.OnRecvSimobjectDataBytype += new SimConnect.RecvSimobjectDataBytypeEventHandler(SimConnect_OnRecvSimobjectDataBytype);
-
                         m_oSimConnect.OnRecvSystemState += new SimConnect.RecvSystemStateEventHandler(SimConnect_OnRecvEvent);
+
                         m_oSimConnect.SubscribeToSystemEvent(Event.RECUR_1SEC, "1sec");
                     }
 
