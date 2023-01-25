@@ -23,7 +23,6 @@ namespace SimListener
         private const int WM_USER_SIMCONNECT = 0x0402;
         private SimConnect? m_oSimConnect;
         private readonly ObservableCollection<SimListener> lSimvarRequests;
-        private readonly ObservableCollection<uint> lObjectIDs;
         private string AircaftLoaded = "Unknown";
         private uint m_iCurrentDefinition = 0;
         private uint m_iCurrentRequest = 0;
@@ -51,13 +50,13 @@ namespace SimListener
 
             if (lSimvarRequests.Contains<SimListener>(oSimvarRequest))
             {
-                Console.WriteLine($"Request already exists -> {oSimvarRequest}");
                 return ErrorCodes.OK;
             }
 
             oSimvarRequest.bPending = !RegisterToSimConnect(oSimvarRequest);
             oSimvarRequest.bStillPending = oSimvarRequest.bPending;
 
+            Console.WriteLine($"Adding Request: -> {oSimvarRequest.Parameter }");
             lSimvarRequests?.Add(oSimvarRequest);
 
             ++m_iCurrentDefinition;
@@ -148,19 +147,10 @@ namespace SimListener
 
             if (iObject == 1)
             {
-                if (lObjectIDs != null)
-                {
-                    if (!lObjectIDs.Contains(iObject))
-                    {
-                        lObjectIDs.Add(iObject);
-                    }
-                }
-
                 if (lSimvarRequests != null)
                 {
                     foreach (SimListener oSimvarRequest in lSimvarRequests)
                     {
-
                         if (iRequest == (uint)oSimvarRequest.eRequest)
                         {
                             if (oSimvarRequest.bIsString)
@@ -249,7 +239,8 @@ namespace SimListener
                     {
                         if (!ReturnValue.ContainsKey(oSimvarRequest.Parameter))
                         {
-                            ReturnValue.Add(oSimvarRequest.Parameter, "");
+                            ReturnValue.Add(oSimvarRequest.Parameter, "" );
+                            oSimvarRequest.bPending = false;
                         }
 
                         if (oSimvarRequest.Value is not null)
@@ -310,11 +301,6 @@ namespace SimListener
         /// <summary>Initializes a new instance of the <see cref="T:SimListener.Connect" /> class.</summary>
         public Connect()
         {
-            lObjectIDs = new ObservableCollection<uint>
-            {
-                1
-            };
-
             lSimvarRequests = new ObservableCollection<SimListener>();
         }
 
