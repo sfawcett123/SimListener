@@ -1,0 +1,68 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- Define the variables in "$(var.*) expressions" -->
+<?define Name = "Simulator Broadcast Data" ?>
+<?define Manufacturer = "fawcett" ?>
+<?define Version = "1.0.0.0" ?>
+<?define UpgradeCode = "9ED3FF33-8718-444E-B44B-69A2344B7E98" ?>
+
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs"
+		 xmlns:util="http://wixtoolset.org/schemas/v4/wxs/util"
+	     xmlns:ui="http://wixtoolset.org/schemas/v4/wxs/ui">
+	
+	<Package Name="$(Name)"
+             Manufacturer="$(Manufacturer)"
+             Version="$(Version)"
+             UpgradeCode="$(var.UpgradeCode)"
+             Compressed="true">
+
+		<!-- Allow upgrades and prevent downgrades -->
+		<MajorUpgrade DowngradeErrorMessage="A later version of [ProductName] is already installed. Setup will now exit." />
+
+		<ui:WixUI Id="WixUI_InstallDir"   InstallDirectory="INSTALLFOLDER" />
+
+		<!-- The files inside this DirectoryRef are linked INSTALLFOLDER -->
+		<DirectoryRef Id="INSTALLFOLDER">
+
+			<Component Id="ServiceLibrary" Guid="ab3d6eae-8809-4b3d-9c60-b51d5c048a95" Bitness="always64">
+				<File Id="BroadcastService.dll"
+					Source="$(var.BroadcastService.TargetDir)publish\BroadcastService.dll"
+	                KeyPath="false" />
+			</Component>
+
+			<Component Id="ServiceExecutable" Guid="a69c7177-27a5-4f47-af0a-70dc9e995db1" Bitness="always64">
+
+				<File Id="BroadcastService.exe"
+                      Source="$(var.BroadcastService.TargetDir)publish\BroadcastService.exe"
+                      KeyPath="true" />
+
+				<!-- Remove all files from the INSTALLFOLDER on uninstall -->
+				<RemoveFile Id="ALLFILES" Name="*.*" On="both" />
+
+				<!-- Tell WiX to install the Service -->
+				<ServiceInstall Id="ServiceInstaller"
+                                Type="ownProcess"
+                                Name="BroadcastService"
+                                DisplayName="$(Name)"
+                                Description="xxxxxxxxxxxxxxxx"
+                                Start="auto"
+                                ErrorControl="normal" />
+
+				<!-- Tell WiX to start the Service -->
+				<ServiceControl Id="StartService"
+                                Start="install"
+                                Stop="both"
+                                Remove="uninstall"
+                                Name="BroadcastService"
+                                Wait="true" />
+			</Component>
+		</DirectoryRef>
+
+		<!-- Tell WiX to install the files -->
+		<Feature Id="Service" Title="BroadcastService Setup" Level="1">
+			<ComponentRef Id="ServiceExecutable" />
+			<ComponentRef Id="ServiceLibrary" />
+		</Feature>
+
+	</Package>
+</Wix>

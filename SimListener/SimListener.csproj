@@ -4,7 +4,7 @@
     <TargetFramework>net8.0-windows7.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <Platforms>x64</Platforms>
+    <Platforms>x64;AnyCPU</Platforms>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <Title>Sim Listener Library</Title>
     <Copyright>Steven Fawcett</Copyright>
