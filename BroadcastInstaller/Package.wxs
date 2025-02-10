@@ -8,23 +8,23 @@
 
 
 <Wix xmlns="http://wixtoolset.org/schemas/v4/wxs"
-		 xmlns:util="http://wixtoolset.org/schemas/v4/wxs/util"
-	     xmlns:ui="http://wixtoolset.org/schemas/v4/wxs/ui">
-	
+  xmlns:ui="http://wixtoolset.org/schemas/v4/wxs/ui">
+
 	<Package Name="$(Name)"
              Manufacturer="$(Manufacturer)"
              Version="$(Version)"
              UpgradeCode="$(var.UpgradeCode)"
              Compressed="true">
 
+		<WixVariable Id="WixUILicenseRtf" Value="license.rtf" />
+
 		<!-- Allow upgrades and prevent downgrades -->
 		<MajorUpgrade DowngradeErrorMessage="A later version of [ProductName] is already installed. Setup will now exit." />
 
-		<WixVariable Id="WixUILicenseRtf" Value="bpl.rtf" />
 		<SetDirectory Id="INSTALLFOLDER" Value="[ProgramFilesFolder]\$(Manufacturer)\$(Name)" />
 
 		<ui:WixUI Id="WixUI_InstallDir"   InstallDirectory="INSTALLFOLDER" />
-
+		
 		<!-- The files inside this DirectoryRef are linked INSTALLFOLDER -->
 		<DirectoryRef Id="INSTALLFOLDER">
 			
@@ -34,8 +34,7 @@
 	                KeyPath="false" />
 			</Component>
 
-			<Component Id="ServiceExecutable" Guid="a69c7177-27a5-4f47-af0a-70dc9e995db1" Bitness="always64">
-				
+			<Component Id="ServiceExecutable" Guid="a69c7177-27a5-4f47-af0a-70dc9e995db1" Bitness="always64"> 			
 				<File Id="BroadcastService.exe"
                       Source="$(var.BroadcastService.TargetDir)publish\BroadcastService.exe"
                       KeyPath="true" />
