@@ -6,6 +6,7 @@
 <?define Version = "1.0.0.0" ?>
 <?define UpgradeCode = "9ED3FF33-8718-444E-B44B-69A2344B7E98" ?>
 
+
 <Wix xmlns="http://wixtoolset.org/schemas/v4/wxs"
 		 xmlns:util="http://wixtoolset.org/schemas/v4/wxs/util"
 	     xmlns:ui="http://wixtoolset.org/schemas/v4/wxs/ui">
@@ -19,11 +20,14 @@
 		<!-- Allow upgrades and prevent downgrades -->
 		<MajorUpgrade DowngradeErrorMessage="A later version of [ProductName] is already installed. Setup will now exit." />
 
+		<WixVariable Id="WixUILicenseRtf" Value="bpl.rtf" />
+		<SetDirectory Id="INSTALLFOLDER" Value="[ProgramFilesFolder]\$(Manufacturer)\$(Name)" />
+
 		<ui:WixUI Id="WixUI_InstallDir"   InstallDirectory="INSTALLFOLDER" />
 
 		<!-- The files inside this DirectoryRef are linked INSTALLFOLDER -->
 		<DirectoryRef Id="INSTALLFOLDER">
-
+			
 			<Component Id="ServiceLibrary" Guid="ab3d6eae-8809-4b3d-9c60-b51d5c048a95" Bitness="always64">
 				<File Id="BroadcastService.dll"
 					Source="$(var.BroadcastService.TargetDir)publish\BroadcastService.dll"
@@ -31,7 +35,7 @@
 			</Component>
 
 			<Component Id="ServiceExecutable" Guid="a69c7177-27a5-4f47-af0a-70dc9e995db1" Bitness="always64">
-
+				
 				<File Id="BroadcastService.exe"
                       Source="$(var.BroadcastService.TargetDir)publish\BroadcastService.exe"
                       KeyPath="true" />
@@ -57,7 +61,8 @@
                                 Wait="true" />
 			</Component>
 		</DirectoryRef>
-
+		
+		
 		<!-- Tell WiX to install the files -->
 		<Feature Id="Service" Title="BroadcastService Setup" Level="1">
 			<ComponentRef Id="ServiceExecutable" />
