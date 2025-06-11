@@ -49,7 +49,7 @@ jobs:
          dotnet tool install -g dotnetCampus.TagToVersion
          cd SimListener
          echo ${{ github.ref }}
-         ls -lrt
+         ls -lrt ./Build
          dotnet TagToVersion -t "v1.9.20" ./Build/version.props
          # dotnet TagToVersion -t ${{ github.ref }} ./Build/version.props
 
