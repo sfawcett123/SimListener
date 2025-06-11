@@ -35,8 +35,9 @@ jobs:
       uses: actions/setup-dotnet@v4
 
     # Create the NuGet package in the folder from the environment variable NuGetDirectory
-    - name: Create NuGet directory
-      run: mkdir -p ${{ env.NuGetDirectory }}
+
+    - name: Move to the SimListener directory
+      run: cd ${{ github.workspace }}/SimListener
 
     - name: Restore dependencies and Build
       run:  dotnet build --configuration Release
