@@ -42,14 +42,16 @@ jobs:
     - name: Restore dependencies and Build
       run:  dotnet build --configuration Release
 
+    - id: get_version
+      if: github.event_name == 'release'
+      name: Get version
+      uses: jannemattila/get-version-from-tag@v4
+      
     - name: Get Version
       if: github.event_name == 'release'
       run: |
-         dotnet tool install -g dotnetCampus.TagToVersion
-         dotnet TagToVersion -t ${{ github.ref }} ./Build/version.props
-
-    - name: Package NuGet
-      run: dotnet pack --configuration Release --output ${{ env.NuGetDirectory }}
+         VERSION=$(echo "${{ steps.get_version.outputs.version }}")
+         dotnet pack --configuration Release --output ${{ env.NuGetDirectory }} -p PackageVersion=${VERSION}
 
     # Publish the NuGet package as an artifact, so they can be used in the following jobs
     - uses: actions/upload-artifact@v4
