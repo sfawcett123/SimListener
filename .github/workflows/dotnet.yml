@@ -35,15 +35,20 @@ jobs:
       uses: actions/setup-dotnet@v4
 
     # Create the NuGet package in the folder from the environment variable NuGetDirectory
+    - name: Create NuGet directory
+      run: mkdir -p ${{ env.NuGetDirectory }}
+
+    - name: Restore dependencies and Build
+      run:  dotnet build --configuration Release
+
     - name: Get Version
       if: github.event_name == 'release'
       run: |
          dotnet tool install -g dotnetCampus.TagToVersion
          dotnet TagToVersion -t ${{ github.ref }}
 
-    - run: |
-         dotnet build --configuration Release
-         dotnet pack --configuration Release --output ${{ env.NuGetDirectory }}
+    - name: Package NuGet
+      run: dotnet pack --configuration Release --output ${{ env.NuGetDirectory }}
 
     # Publish the NuGet package as an artifact, so they can be used in the following jobs
     - uses: actions/upload-artifact@v4
