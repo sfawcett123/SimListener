@@ -6,7 +6,6 @@ on:
   push:
     branches:
       - 'main'       # Run the workflow when pushing to the main branch
-      - 'sfawcett*'
   pull_request:
     branches:
       - '*'          # Run the workflow for all pull requests
@@ -44,11 +43,12 @@ jobs:
       run:  dotnet build --configuration Release
 
     - id: get_version
+      if: github.event_name == 'release'
       name: Get version
       uses: jannemattila/get-version-from-tag@v4
       
     - name: Get Version
-      # if: github.event_name == 'release'
+      if: github.event_name == 'release'
       run: |
          VERSION=$(echo "${{ steps.get_version.outputs.version }}")
          dotnet pack --configuration Release --output ${{ env.NuGetDirectory }} -p PackageVersion=${VERSION}
