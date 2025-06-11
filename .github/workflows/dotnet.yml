@@ -47,8 +47,7 @@ jobs:
       # if: github.event_name == 'release'
       run: |
          dotnet tool install -g dotnetCampus.TagToVersion
-         dotnet TagToVersion -t "v1.9.20" -c
-         VERSION=$(dotnet-TagToVersion -t "v1.9.20" -c)
+         VERSION=`dotnet-TagToVersion -t "v1.9.20" -c`
          dotnet pack --configuration Release --output ${{ env.NuGetDirectory }} -p PackageVersion=${VERSION}
 
     # Publish the NuGet package as an artifact, so they can be used in the following jobs
