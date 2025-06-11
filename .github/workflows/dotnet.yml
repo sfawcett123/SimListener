@@ -49,6 +49,7 @@ jobs:
       
     - name: Get Version
       if: github.event_name == 'release'
+      shell: bash
       run: |
          VERSION=$(echo "${{ steps.get_version.outputs.version }}")
          dotnet pack --configuration Release --output ${{ env.NuGetDirectory }} -p PackageVersion=${VERSION}
