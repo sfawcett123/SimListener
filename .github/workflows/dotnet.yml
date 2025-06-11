@@ -35,9 +35,13 @@ jobs:
       uses: actions/setup-dotnet@v4
 
     # Create the NuGet package in the folder from the environment variable NuGetDirectory
-    - run: |
+    - name: Get Version
+      if: github.event_name == 'release'
+      run: |
          dotnet tool install -g dotnetCampus.TagToVersion
          dotnet TagToVersion -t ${{ github.ref }}
+
+    - run: |
          dotnet build --configuration Release
          dotnet pack --configuration Release --output ${{ env.NuGetDirectory }}
 
