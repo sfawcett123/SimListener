@@ -48,7 +48,9 @@ jobs:
       run: |
          dotnet tool install -g dotnetCampus.TagToVersion
          echo ${{ github.ref }}
-         dotnet TagToVersion -t ${{ github.ref }} ./Build/version.props
+         ls -lrt
+         dotnet TagToVersion -t "v1.9.20" ./Build/version.props
+         # dotnet TagToVersion -t ${{ github.ref }} ./Build/version.props
 
     - name: Package NuGet
       run: dotnet pack --configuration Release --output ${{ env.NuGetDirectory }}
