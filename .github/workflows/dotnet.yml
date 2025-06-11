@@ -36,9 +36,10 @@ jobs:
 
     # Create the NuGet package in the folder from the environment variable NuGetDirectory
     - run: |
-         VERSION=${GITHUB_REF/refs\/tags\/v/}  
-         dotnet build --configuration Release /p:Version=${VERSION}
-         dotnet pack --configuration Release --output ${{ env.NuGetDirectory }} /p:Version=${VERSION}
+         dotnet tool install -g dotnetCampus.TagToVersion
+         dotnet TagToVersion -t ${{ github.ref }}
+         dotnet build --configuration Release
+         dotnet pack --configuration Release --output ${{ env.NuGetDirectory }}
 
     # Publish the NuGet package as an artifact, so they can be used in the following jobs
     - uses: actions/upload-artifact@v4
