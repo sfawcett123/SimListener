@@ -15,6 +15,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="SimConnect.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="SimConnect.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
     <None Include="..\LICENSE">
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
@@ -33,9 +43,6 @@
 
   <ItemGroup>
     <None Update="Microsoft.FlightSimulator.SimConnect.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="SimConnect.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
