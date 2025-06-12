@@ -1,13 +1,4 @@
-﻿using System;
-using System.Collections.ObjectModel;
-using System.Globalization;
-using System.IO;
-using System.Runtime.InteropServices;
-
-using System.Collections.Generic;
-using System.Linq;
-using System.Collections;
-using Microsoft.VisualStudio.PlatformUI;
+﻿using System.Runtime.InteropServices;
 
 namespace SimListener
 {
@@ -18,7 +9,7 @@ namespace SimListener
         public string sValue;
     };
 
-    internal class SimvarRequest : ObservableObject
+    internal class SimvarRequest 
     {
         public DEFINITION eDef = DEFINITION.Dummy;
         public REQUEST eRequest = REQUEST.Dummy;

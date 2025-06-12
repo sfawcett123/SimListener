@@ -1,9 +1,7 @@
 ﻿using Microsoft.FlightSimulator.SimConnect;
-
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 
 namespace SimListener 
