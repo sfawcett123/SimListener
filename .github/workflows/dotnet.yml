@@ -40,7 +40,7 @@ jobs:
       run: cd ${{ github.workspace }}/SimListener
 
     - name: Restore dependencies 
-      run:  dotnet restore --configuration Release
+      run:  dotnet restore
 
     - name: Build
       run:  dotnet build --configuration Release
