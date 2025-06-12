@@ -44,14 +44,21 @@ jobs:
 
     - id: get_version
       if: github.event_name == 'release'
-      name: Get version
+      name: Get version from tag
       uses: jannemattila/get-version-from-tag@v4
       
-    - name: Get Version
+    - name: Get Version (release)
       if: github.event_name == 'release'
       shell: bash
       run: |
          VERSION=$(echo "${{ steps.get_version.outputs.version }}")
+         dotnet pack --configuration Release --output ${{ env.NuGetDirectory }} -p PackageVersion=${VERSION}
+
+    - name: Get Version (none release)
+      if: github.event_name != 'release'
+      shell: bash
+      run: |
+         VERSION=$(date +%s) # Use current timestamp as version
          dotnet pack --configuration Release --output ${{ env.NuGetDirectory }} -p PackageVersion=${VERSION}
 
     # Publish the NuGet package as an artifact, so they can be used in the following jobs
