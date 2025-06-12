@@ -8,6 +8,11 @@
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <Title>Sim Listener Library</Title>
     <Copyright>Steven Fawcett</Copyright>
+	<Authors>Steven Fawcett</Authors> 
+	<Company>Steven Fawcett</Company>
+    <Description>Sim Listener Library for Microsoft Flight Simulator 2024</Description>
+    <PackageId>SimListener</PackageId>
+	<EnablePackageValidation>true</EnablePackageValidation>
     <PackageProjectUrl>https://github.com/sfawcett123/SimListener</PackageProjectUrl>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <RepositoryUrl>https://github.com/sfawcett123/SimListener</RepositoryUrl>
