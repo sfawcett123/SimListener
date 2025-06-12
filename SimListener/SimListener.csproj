@@ -12,8 +12,8 @@
 	<Company>Steven Fawcett</Company>
     <Description>Sim Listener Library for Microsoft Flight Simulator 2024</Description>
     <PackageId>SimListener</PackageId>
-	<icon>airplane.png</icon>
-	<PackageIcon>airplane.png</PackageIcon>
+	<icon>assets/airplane.png</icon>
+	<PackageIcon>assets/airplane.png</PackageIcon>
 	<files>
 		  <file src="assets/airplane.png" target="" /> 
 	</files>
