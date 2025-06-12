@@ -14,7 +14,7 @@ namespace SimListener
         public DEFINITION eDef = DEFINITION.Dummy;
         public REQUEST eRequest = REQUEST.Dummy;
 
-        public string sName { get; set; }
+        public string? sName { get; set; }
         public bool bIsString { get; set; }
         public double dValue
         {
@@ -22,14 +22,15 @@ namespace SimListener
             get { return m_dValue; }
         }
         private double m_dValue = 0.0;
-        public string sValue
+        public string? sValue
         {
             set { m_sValue = value; }
-            get { return m_sValue; }
-        }
-        private string m_sValue = null;
 
-        public string sUnits { get; set; }
+            get => m_sValue;
+        }
+        private string? m_sValue = null;
+
+        public string? sUnits { get; set; }
 
         public bool bPending = true;
         public bool bStillPending

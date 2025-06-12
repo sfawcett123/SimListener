@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net8.0-windows7.0</TargetFramework>
@@ -24,20 +24,30 @@
       <PackagePath>\</PackagePath>
     </None>
   </ItemGroup>
-
+		  
+  <ItemGroup>
+	  <Content Include="libraries\Microsoft.FlightSimulator.SimConnect.dll">
+		  <Pack>true</Pack>
+		  <PackagePath>lib\$(TargetFramework)</PackagePath>
+		  <HintPath>lib\Microsoft.FlightSimulator.SimConnect.dll</HintPath>
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </Content>
+  </ItemGroup>
+		  
+  <ItemGroup>
+	  <Content Include="libraries\SimConnect.dll">
+          <Pack>true</Pack>
+          <PackagePath>lib\$(TargetFramework)</PackagePath>
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	      <HintPath>SimConnect.dll</HintPath>
+	   </Content>
+  </ItemGroup>
+		  
   <ItemGroup>
     <Reference Include="Microsoft.FlightSimulator.SimConnect">
-      <HintPath>..\..\FlightSimulatorManager\Microsoft.FlightSimulator.SimConnect.dll</HintPath>
+      <HintPath>libraries\Microsoft.FlightSimulator.SimConnect.dll</HintPath>
     </Reference>
   </ItemGroup>
-
-  <ItemGroup>
-    <None Update="Microsoft.FlightSimulator.SimConnect.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="SimConnect.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
+		  
 
 </Project>
