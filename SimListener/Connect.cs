@@ -26,7 +26,6 @@ namespace SimListener
         private string AircaftLoaded = "Unknown";
         private uint m_iCurrentDefinition = 0;
         private uint m_iCurrentRequest = 0;
-        private readonly TrackList _TrackList = new();
         #endregion Private
 
         #region Private Methods
@@ -231,8 +230,6 @@ namespace SimListener
 
             if (lSimvarRequests != null)
             {
-                _TrackList.AddTrack( TrackList.ConstructTrack(lSimvarRequests)); 
-
                 foreach (SimListener oSimvarRequest in lSimvarRequests)
                 {
                     if (oSimvarRequest.Parameter is not null)
@@ -264,10 +261,6 @@ namespace SimListener
             }
 
             return ReturnValue;
-        }
-        public List<Track> TrackData()
-        {
-            return _TrackList.List();
         }
         public ErrorCodes AddRequest(string _sNewSimvarRequest)
         {
