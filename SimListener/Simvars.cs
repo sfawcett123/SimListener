@@ -2,10 +2,10 @@
 
 namespace SimListener
 {
-    public class SimVars
+    internal class SimVars
     {
         /// <summary>List of valid request types</summary>
-        public static readonly string[] Names = new string[]
+        internal static readonly string[] Names = new string[]
         {
             "NONE",
             "ACCELERATION BODY X",
@@ -1325,7 +1325,7 @@ namespace SimListener
 
         /// <summary>The default units
         /// ( Feet, Degrees etc)</summary>
-        public static readonly string[] DefaultUnits = new string[]
+        internal static readonly string[] DefaultUnits = new string[]
         {
             "",
             "Feet per second squared",

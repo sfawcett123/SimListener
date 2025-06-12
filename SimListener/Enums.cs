@@ -1,18 +1,13 @@
 ﻿namespace SimListener
 {
-    public enum ErrorCodes
-    {
-        OK,
-        INVALID_DATA_REQUEST,
-    }
-    internal enum Definition
+    internal enum DEFINITION
     {
         Dummy = 0
     };
-    internal enum Request
+    internal enum REQUEST
     {
         Dummy = 0,
-        Struct1
+        ResultStructure
     };
     internal enum Event
     {

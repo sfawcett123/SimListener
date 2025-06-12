@@ -1,38 +1,49 @@
 ﻿using SimListener;
 using System.Diagnostics;
+using System;
+using System.Threading.Tasks;
+using System.Timers;
 
-Connect cnx = new();
-
-KeyValuePair<string, string> Data = new("PLANE LATITUDE", "");
-List<string> Test = new() { Data.Key };
-
-bool requested = false;
-
-foreach (var i in Enumerable.Range(0, 60000))
+class Example
 {
-    
-    if (!cnx.Connected)
+    static void Main()
     {
-        requested = false;
-        cnx.ConnectToSim();
-        Console.WriteLine($"Connection is {cnx.Connected}");
+        // This is a test program to connect to the simulator and receive data.
+        Connect cnx = new(); 
+        
+        Console.WriteLine("In Loop Forever. ");
+        cnx.SimConnected += c_SimConnected;
+        cnx.SimDataRecieved += c_SimDataRecieved;
+        for (; ; );
     }
 
-    if (cnx.Connected)
+    static void c_SimConnected(object sender, EventArgs e)
     {
-        if (! requested)
-        {
-            cnx.AddRequests(Test);
-            requested = true;
-        }
+        Console.WriteLine($"Simulator Connected.");
+        Connect cnx = (Connect)sender;
+        List<string> Data = new List<string>() { "PLANE ALTITUDE", "PLANE LATITUDE" };
+        cnx.AddRequests(Data);
+    }
 
-        foreach (var req in cnx.AircraftData())
+    static void c_SimDataRecieved(object? sender, SimulatorData e)
+    {
+        Console.WriteLine($"Simulator Data Recieved. {e.TimeReached} ");
+        foreach (var item in e.AircraftData)
         {
-            if (req.Key == Data.Key && req.Value != "")
+            foreach (var kvp in item)
             {
-                Console.WriteLine($"Output -> {req.Key} = {req.Value}");
+                Console.WriteLine($"{kvp.Key}: {kvp.Value}");
             }
         }
+
     }
-    Thread.Sleep(1000);
 }
+
+
+
+
+
+
+
+
+
