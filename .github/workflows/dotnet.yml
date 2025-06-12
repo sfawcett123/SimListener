@@ -39,7 +39,10 @@ jobs:
     - name: Move to the SimListener directory
       run: cd ${{ github.workspace }}/SimListener
 
-    - name: Restore dependencies and Build
+    - name: Restore dependencies 
+      run:  dotnet restore --configuration Release
+
+    - name: Build
       run:  dotnet build --configuration Release
 
     - id: get_version
