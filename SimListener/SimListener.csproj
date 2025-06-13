@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net8.0-windows7.0</TargetFramework>
@@ -7,11 +7,17 @@
     <Platforms>x64;AnyCPU</Platforms>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <Title>Sim Listener Library</Title>
-    <Copyright>Steven Fawcett</Copyright>
-    <PackageProjectUrl>https://github.com/sfawcett123/SimListener</PackageProjectUrl>
+    <Copyright>© 2024 Sim Listener.</Copyright>
+	<Authors>Steven Fawcett</Authors> 
+	<Company>Steven Fawcett Productions</Company>
+    <Description>Sim Listener Library for Microsoft Flight Simulator 2024</Description>
+    <PackageId>SimListener</PackageId>
+	<PackageIcon>airplane.png</PackageIcon>
+    <PackageProjectUrl>https://sfawcett123.github.io/</PackageProjectUrl>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <RepositoryUrl>https://github.com/sfawcett123/SimListener</RepositoryUrl>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
+	<PackageTags>MSFS Simulator Listener</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
@@ -23,14 +29,22 @@
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </None>
+	<None Include="assets\airplane.png">
+		  <Pack>True</Pack>
+		  <PackagePath>\</PackagePath>
+	 </None>
   </ItemGroup>
-
+		  
+  <ItemGroup>
+    <Folder Include="assets\" />
+  </ItemGroup>
+		  
   <ItemGroup>
     <Reference Include="Microsoft.FlightSimulator.SimConnect">
-      <HintPath>..\..\FlightSimulatorManager\Microsoft.FlightSimulator.SimConnect.dll</HintPath>
-    </Reference>
+      <HintPath>..\..\..\..\..\..\..\MSFS 2024 SDK\SimConnect SDK\lib\managed\Microsoft.FlightSimulator.SimConnect.dll</HintPath>
+	</Reference>
   </ItemGroup>
-
+		  
   <ItemGroup>
     <None Update="Microsoft.FlightSimulator.SimConnect.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -38,6 +52,5 @@
     <None Update="SimConnect.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-  </ItemGroup>
-
+  </ItemGroup>		    
 </Project>

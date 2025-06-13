@@ -6,8 +6,6 @@ using System.Runtime.InteropServices;
 
 namespace SimListener 
 {
-
-
     public class Connect : IDisposable
     {
         #region IDisposable Support
@@ -96,6 +94,26 @@ namespace SimListener
         {
             Debug.WriteLine($"AddRequest {_sNewSimvarRequest} ");
 
+            if (!ValidateRequest(_sNewSimvarRequest))
+            {
+                Debug.WriteLine($"Invalid request: {_sNewSimvarRequest}. Skipping.");
+                return;
+            }
+            if (m_oSimConnect is null)
+            {
+                Debug.WriteLine("SimConnect is not connected. Cannot add request.");
+                return;
+            }
+            if (lSimvarRequests is null)
+            {
+                lSimvarRequests = new ObservableCollection<SimvarRequest>();
+            }
+            if (m_iCurrentDefinition >= (uint)DEFINITION.MAX_DEFINITIONS || m_iCurrentRequest >= (uint)REQUEST.MAX_REQUESTS)
+            {
+                Debug.WriteLine("Maximum definitions or requests reached. Cannot add more.");
+                return;
+            }
+
             SimvarRequest oSimvarRequest = new SimvarRequest
             {
                 eDef = (DEFINITION)m_iCurrentDefinition,
@@ -108,7 +126,10 @@ namespace SimListener
             oSimvarRequest.bPending = !RegisterToSimConnect(oSimvarRequest);
             oSimvarRequest.bStillPending = oSimvarRequest.bPending;
 
-            lSimvarRequests.Add(oSimvarRequest);
+            if (lSimvarRequests is not null)
+            {
+                lSimvarRequests.Add(oSimvarRequest);
+            }
 
             ++m_iCurrentDefinition;
             ++m_iCurrentRequest;
@@ -153,7 +174,11 @@ namespace SimListener
         private void SimConnect_OnRecvOpen(SimConnect sender, SIMCONNECT_RECV_OPEN data)
         {
             Debug.WriteLine("SimConnect_OnRecvOpen");
-
+            if( lSimvarRequests is null)
+            {
+                return;
+            }
+              
             // Register pending requests
             foreach (SimvarRequest oSimvarRequest in lSimvarRequests)
             {
@@ -194,7 +219,12 @@ namespace SimListener
                     if (iRequest == (uint)oSimvarRequest.eRequest )
                     {
                         Debug.WriteLine($"Processing request: {oSimvarRequest.sName} with ID: {iRequest} == {(uint)oSimvarRequest.eRequest}");
-                        
+                        if(oSimvarRequest.sName is null)
+                        {
+                            Debug.WriteLine($"Request {iRequest} has no name. Skipping.");
+                            continue;
+                        }
+
                         if (oSimvarRequest.bIsString)
                         {
                             ResultStructure result = (ResultStructure)data.dwData[0];
@@ -331,12 +361,12 @@ namespace SimListener
                 }               
             }
         }
-        public event EventHandler SimConnected;
-        public event EventHandler SimDisconnected;
-        public event EventHandler<SimulatorData> SimDataRecieved;
+        public event EventHandler? SimConnected;
+        public event EventHandler? SimDisconnected;
+        public event EventHandler<SimulatorData>? SimDataRecieved;
         protected virtual void OnSimConnected()
         {
-            EventHandler handler = SimConnected;
+            EventHandler? handler = SimConnected;
             if (handler != null)
             {
                 handler(this,EventArgs.Empty);
@@ -351,7 +381,7 @@ namespace SimListener
                 timer.Start();
             }
 
-            EventHandler handler = SimDisconnected;
+            EventHandler? handler = SimDisconnected;
             if (handler != null)
             {
                 handler(this,EventArgs.Empty);
@@ -359,7 +389,7 @@ namespace SimListener
         }
         protected virtual void OnSimDataRecieved(SimulatorData e)
         {
-            EventHandler<SimulatorData> handler = SimDataRecieved;
+            EventHandler<SimulatorData>? handler = SimDataRecieved;
             if (handler != null)
             {
                 handler(this, e);
