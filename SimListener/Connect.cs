@@ -1,7 +1,7 @@
 ﻿using Microsoft.FlightSimulator.SimConnect;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Runtime.InteropServices;
+using Microsoft.Extensions.Logging;
 
 namespace SimListener 
 {
@@ -51,7 +51,9 @@ namespace SimListener
         #region Private variables
         private SimConnect? m_oSimConnect = null;
         private ObservableCollection<SimvarRequest>? lSimvarRequests;
-        System.Timers.Timer? timer;
+        private ILoggerFactory factory = LoggerFactory.Create(builder => builder.AddConsole());
+        private ILogger? logger = null;
+        private System.Timers.Timer? timer;
         private string AircaftLoaded = "Unknown";
         private uint m_iCurrentDefinition = 0;
         private uint m_iCurrentRequest = 0;
@@ -70,7 +72,7 @@ namespace SimListener
 
                     if (m_oSimConnect is not null)
                     {
-                        Debug.WriteLine("SimConnect connection established.");
+                        logger?.LogInformation("SimConnect connection established.");
                         // Listen to connect and quit msgs  
                         m_oSimConnect.OnRecvOpen += new SimConnect.RecvOpenEventHandler(SimConnect_OnRecvOpen);
                         m_oSimConnect.OnRecvQuit += new SimConnect.RecvQuitEventHandler(SimConnect_OnRecvQuit);
@@ -84,7 +86,7 @@ namespace SimListener
                 }
                 catch (COMException)
                 {
-                    Debug.WriteLine("SimConnect connection failed. Is MSFS running?");
+                    logger?.LogError("SimConnect connection failed. Is MSFS running?");
                     m_oSimConnect = null;
                     SimDisconnected?.Invoke(this, EventArgs.Empty);
                     return;
@@ -93,16 +95,16 @@ namespace SimListener
         }
         private void InternalAddRequest(string _sNewSimvarRequest, string _sNewUnitRequest, bool _bIsString)
         {
-            Debug.WriteLine($"AddRequest {_sNewSimvarRequest} ");
+            logger?.LogInformation($"AddRequest {_sNewSimvarRequest} ");
 
             if (!ValidateRequest(_sNewSimvarRequest))
             {
-                Debug.WriteLine($"Invalid request: {_sNewSimvarRequest}. Skipping.");
+                logger?.LogError($"Invalid request: {_sNewSimvarRequest}. Skipping.");
                 return;
             }
             if (m_oSimConnect is null)
             {
-                Debug.WriteLine("SimConnect is not connected. Cannot add request.");
+                logger?.LogDebug("SimConnect is not connected. Cannot add request.");
                 return;
             }
             if (lSimvarRequests is null)
@@ -111,7 +113,7 @@ namespace SimListener
             }
             if (m_iCurrentDefinition >= (uint)DEFINITION.MAX_DEFINITIONS || m_iCurrentRequest >= (uint)REQUEST.MAX_REQUESTS)
             {
-                Debug.WriteLine("Maximum definitions or requests reached. Cannot add more.");
+                logger?.LogError("Maximum definitions or requests reached. Cannot add more.");
                 return;
             }
 
@@ -134,7 +136,7 @@ namespace SimListener
 
             ++m_iCurrentDefinition;
             ++m_iCurrentRequest;
-            Debug.WriteLine($"Request {_sNewSimvarRequest} added with Definition ID: {oSimvarRequest.eDef} and Request ID: {oSimvarRequest.eRequest}");
+            logger?.LogDebug ($"Request {_sNewSimvarRequest} added with Definition ID: {oSimvarRequest.eDef} and Request ID: {oSimvarRequest.eRequest}");
         }
         private void ReceiveSimConnectMessage()
         {
@@ -150,7 +152,7 @@ namespace SimListener
         }
         private bool RegisterToSimConnect(SimvarRequest _oSimvarRequest)
         {
-            Debug.WriteLine($"Registering Request {_oSimvarRequest.sName}");
+            logger?.LogDebug($"Registering Request {_oSimvarRequest.sName}");
 
             if (m_oSimConnect != null)
             {
@@ -174,7 +176,7 @@ namespace SimListener
         }
         private void SimConnect_OnRecvOpen(SimConnect sender, SIMCONNECT_RECV_OPEN data)
         {
-            Debug.WriteLine("SimConnect_OnRecvOpen");
+            logger?.LogDebug("SimConnect_OnRecvOpen");
             if( lSimvarRequests is null)
             {
                 return;
@@ -209,7 +211,7 @@ namespace SimListener
         }
         private void SimConnect_OnRecvSimobjectDataBytype(SimConnect sender, SIMCONNECT_RECV_SIMOBJECT_DATA_BYTYPE data)
         {
-            Debug.WriteLine($"Received SimObject Data for Request ID: {data.dwRequestID}");
+            logger?.LogDebug($"Received SimObject Data for Request ID: {data.dwRequestID}");
             List<Dictionary<string, string>> AircraftData = new List<Dictionary<string, string>>(); 
 
             uint iRequest = data.dwRequestID;
@@ -219,10 +221,10 @@ namespace SimListener
                 {           
                     if (iRequest == (uint)oSimvarRequest.eRequest )
                     {
-                        Debug.WriteLine($"Processing request: {oSimvarRequest.sName} with ID: {iRequest} == {(uint)oSimvarRequest.eRequest}");
+                        logger?.LogDebug($"Processing request: {oSimvarRequest.sName} with ID: {iRequest} == {(uint)oSimvarRequest.eRequest}");
                         if(oSimvarRequest.sName is null)
                         {
-                            Debug.WriteLine($"Request {iRequest} has no name. Skipping.");
+                            logger?.LogError($"Request {iRequest} has no name. Skipping.");
                             continue;
                         }
 
@@ -232,7 +234,7 @@ namespace SimListener
                             oSimvarRequest.dValue = 0;
                             oSimvarRequest.sValue = result.sValue;
                             AircraftData.Add(new Dictionary<string, string> { { oSimvarRequest.sName, oSimvarRequest.sValue } });
-                            Debug.WriteLine($"Received string value: {oSimvarRequest.sValue} for request: {oSimvarRequest.sName}");
+                            logger?.LogDebug($"Received string value: {oSimvarRequest.sValue} for request: {oSimvarRequest.sName}");
                         }
                         else
                         {
@@ -240,7 +242,7 @@ namespace SimListener
                             oSimvarRequest.dValue = dValue;
                             oSimvarRequest.sValue = dValue.ToString("F9");
                             AircraftData.Add(new Dictionary<string, string> { { oSimvarRequest.sName, oSimvarRequest.dValue.ToString() } });
-                            Debug.WriteLine($"Received double value: {oSimvarRequest.dValue} for request: {oSimvarRequest.sName}");
+                            logger?.LogDebug($"Received double value: {oSimvarRequest.dValue} for request: {oSimvarRequest.sName}");
                         }
 
                         oSimvarRequest.bPending = false;
@@ -333,10 +335,12 @@ namespace SimListener
         }
         private void Initialise(IntPtr hWnd , int time )
         {
+            this.logger = factory.CreateLogger("Flight Simulator Listener");
+            logger?.LogInformation("Connect initialized with hWnd: {hWnd} and timer interval: {time} ms", hWnd, time);
+            
             if (hWnd != IntPtr.Zero)
             {
                 this.hWnd = hWnd ;
-                Debug.WriteLine($"Connect initialized with hWnd: {hWnd}");
             }
 
             lSimvarRequests = new ObservableCollection<SimvarRequest>();
@@ -349,7 +353,7 @@ namespace SimListener
   
             timer.Elapsed += TimerElapsed;
             timer.Start();
-            Debug.WriteLine($"Connect initialized with timer interval: {time} ms");
+            logger?.LogDebug($"Connect initialized with timer interval: {time} ms");
         }
         #endregion
 
@@ -358,7 +362,7 @@ namespace SimListener
         {
             if( !Connected)
             {
-                Debug.WriteLine("Attempting connection...");
+                logger?.LogDebug("Attempting connection...");
                 this.ConnectToSim();
 
             }
@@ -367,11 +371,11 @@ namespace SimListener
                 Dictionary<string, string> data = AircraftData();
                 if (data.Count > 0)
                 {
-                    Debug.WriteLine("SimConnect is connected. Stopping timer");
+                    logger?.LogDebug("SimConnect is connected. Stopping timer");
                     //timer.Stop();
                     foreach (var item in data)
                     {
-                        Debug.WriteLine($"Returned Data: {item.Key} = {item.Value}");
+                        logger?.LogDebug($"Returned Data: {item.Key} = {item.Value}");
                     }
                 }               
             }
@@ -408,7 +412,7 @@ namespace SimListener
         {
             if (timer != null)
             {
-                Debug.WriteLine("Simulator Disconnected Restarting Timer.");
+                logger?.LogInformation("Simulator Disconnected Restarting Timer.");
                 timer.Enabled = true;
                 timer.Start();
             }

@@ -9,11 +9,16 @@ class Example
     static void Main()
     {
         // This is a test program to connect to the simulator and receive data.
-        Connect cnx = new(); 
+        Console.WriteLine("Starting Example Program.");
+        Connect cnx = new( 0, 2000); 
         
-        Console.WriteLine("In Loop Forever. ");
+        Console.WriteLine("Adding SimConnected Event...");
         cnx.SimConnected += c_SimConnected;
+
+        Console.WriteLine("Adding SimDataRecieved Event...");
         cnx.SimDataRecieved += c_SimDataRecieved;
+
+        Console.WriteLine("In Loop Forever. ");
         for (; ; );
     }
 
