@@ -6,8 +6,6 @@ using System.Runtime.InteropServices;
 
 namespace SimListener 
 {
-
-
     public class Connect : IDisposable
     {
         #region IDisposable Support

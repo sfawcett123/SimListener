@@ -17,9 +17,11 @@ class Example
         for (; ; );
     }
 
-    static void c_SimConnected(object sender, EventArgs e)
+    static void c_SimConnected(object? sender, EventArgs e)
     {
         Console.WriteLine($"Simulator Connected.");
+        if (sender == null) return;
+
         Connect cnx = (Connect)sender;
         List<string> Data = new List<string>() { "PLANE ALTITUDE", "PLANE LATITUDE" };
         cnx.AddRequests(Data);

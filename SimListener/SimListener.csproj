@@ -36,32 +36,12 @@
   </ItemGroup>
 		  
   <ItemGroup>
-	  <Content Include="libraries\Microsoft.FlightSimulator.SimConnect.dll">
-		  <Pack>true</Pack>
-		  <PackagePath>lib\$(TargetFramework)</PackagePath>
-		  <HintPath>lib\Microsoft.FlightSimulator.SimConnect.dll</HintPath>
-		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	  </Content>
-  </ItemGroup>
-		  
-  <ItemGroup>
-	  <Content Include="libraries\SimConnect.dll">
-          <Pack>true</Pack>
-          <PackagePath>lib\$(TargetFramework)</PackagePath>
-          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	      <HintPath>SimConnect.dll</HintPath>
-	   </Content>
+    <Folder Include="assets\" />
   </ItemGroup>
 		  
   <ItemGroup>
     <Reference Include="Microsoft.FlightSimulator.SimConnect">
-      <HintPath>libraries\Microsoft.FlightSimulator.SimConnect.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-		  
-  <ItemGroup>
-    <Folder Include="assets\" />
-  </ItemGroup>
-		    
-
+      <HintPath>..\..\..\..\..\..\..\MSFS 2024 SDK\SimConnect SDK\lib\managed\Microsoft.FlightSimulator.SimConnect.dll</HintPath>
+	</Reference>
+  </ItemGroup>		    
 </Project>
