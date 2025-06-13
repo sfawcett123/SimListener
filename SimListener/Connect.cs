@@ -3,13 +3,18 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 
-
 namespace SimListener 
 {
+    /// <summary>
+    /// Represents a connection to the Microsoft Flight Simulator using SimConnect.
+    /// Provides methods to manage simulator data requests and handle connection events.
+    /// </summary>
     public class Connect : IDisposable
     {
-        #region IDisposable Support
-
+        #region Dispose and Connected Properties
+        /// <summary>
+        /// Releases all resources used by the Connect instance.
+        /// </summary>
         public void Dispose()
         {
             if (lSimvarRequests != null)
@@ -20,14 +25,13 @@ namespace SimListener
                     oSimvarRequest.bStillPending = true;
                 }
             }
-             
+
             m_oSimConnect?.Dispose();
             m_oSimConnect = null;
-
         }
-        #endregion  IIDisposable Support
-
-        #region Public
+        /// <summary>
+        /// Gets a value indicating whether the connection to the simulator is established.
+        /// </summary>
         public bool Connected
         {
             get
@@ -54,22 +58,19 @@ namespace SimListener
         private uint m_iCurrentRequest = 0;
         private IntPtr hWnd = IntPtr.Zero;
 
-        #endregion Private
-
-        #region Private Methods
         private void ConnectToSim()
         {
             if (m_oSimConnect is null)
             {
                 try
                 {
-                    /// The constructor is similar to SimConnect_Open in the native API
+                    // The constructor is similar to SimConnect_Open in the native API  
                     m_oSimConnect = new SimConnect("SimListener", hWnd, WM_USER_SIMCONNECT, null, 0);
-                    
+
                     if (m_oSimConnect is not null)
                     {
                         Debug.WriteLine("SimConnect connection established.");
-                        /// Listen to connect and quit msgs
+                        // Listen to connect and quit msgs  
                         m_oSimConnect.OnRecvOpen += new SimConnect.RecvOpenEventHandler(SimConnect_OnRecvOpen);
                         m_oSimConnect.OnRecvQuit += new SimConnect.RecvQuitEventHandler(SimConnect_OnRecvQuit);
                         m_oSimConnect.OnRecvException += new SimConnect.RecvExceptionEventHandler(SimConnect_OnRecvException);
@@ -79,7 +80,6 @@ namespace SimListener
                         m_oSimConnect.SubscribeToSystemEvent(Event.RECUR_1SEC, "1sec");
                         SimConnected?.Invoke(this, EventArgs.Empty);
                     }
-
                 }
                 catch (COMException)
                 {
@@ -255,19 +255,19 @@ namespace SimListener
             return request != null && SimVars.Names.Contains(request);
         }
 
-        #endregion
-
-        #region Public Methods
+        /// <summary>  
+        /// Retrieves the current aircraft data and connection status from the simulator.  
+        /// </summary>  
+        /// <returns>A dictionary containing the connection status and aircraft data.</returns>  
         public Dictionary<string, string> AircraftData()
         {
             ReceiveSimConnectMessage();
 
             Dictionary<string, string> ReturnValue = new()
-            {
+            { 
                 { "Connected"     , Connected.ToString() },
                 { "AircaftLoaded" , AircaftLoaded }
             };
-
             m_oSimConnect?.RequestSystemState(Requests.AIRCRAFT_LOADED, "AircraftLoaded");
 
             if (lSimvarRequests != null)
@@ -277,28 +277,34 @@ namespace SimListener
                     if (!oSimvarRequest.bPending)
                     {
                         m_oSimConnect?.RequestDataOnSimObjectType(oSimvarRequest.eRequest, oSimvarRequest.eDef, 0, SIMCONNECT_SIMOBJECT_TYPE.USER);
-
                         oSimvarRequest.bPending = true;
                     }
                 }
             }
-
             return ReturnValue;
         }
+
+        /// <summary>
+        /// Adds a new Simvar request to the SimConnect connection.
+        /// </summary>
+        /// <param name="_sNewSimvarRequest">The name of the Simvar to request.</param>
         public void AddRequest(string _sNewSimvarRequest)
         {
             InternalAddRequest(_sNewSimvarRequest, "", false);
         }
+        /// <summary>
+        /// Adds multiple Simvar requests to the SimConnect connection.
+        /// </summary>
+        /// <param name="Outputs">A list of Simvar names to request.</param>
         public void AddRequests(List<string> Outputs)
         {
             if (Outputs is not null)
             {
-                if ( Outputs.Any())
+                if (Outputs.Any())
                 {
                     foreach (string output in Outputs)
                     {
                         AddRequest(output);
-  
                     }
                 }
             }
@@ -312,9 +318,14 @@ namespace SimListener
         {
             this.Initialise(IntPtr.Zero , 1000);
         }
-        public Connect(IntPtr hWnd , int time )
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Connect"/> class with a specified window handle and timer interval.
+        /// </summary>
+        /// <param name="hWnd">The handle to the window that will receive SimConnect messages.</param>
+        /// <param name="time">The interval, in milliseconds, for the timer used to attempt connection.</param>
+        public Connect(IntPtr hWnd, int time)
         {
-            this.Initialise( hWnd , time );
+            this.Initialise(hWnd, time);
         }
         private void Initialise(IntPtr hWnd , int time )
         {
@@ -361,17 +372,32 @@ namespace SimListener
                 }               
             }
         }
+        /// <summary>
+        /// Event triggered when the simulator is successfully connected.
+        /// </summary>
         public event EventHandler? SimConnected;
+        /// <summary>
+        /// Event triggered when the simulator is disconnected.
+        /// </summary>
         public event EventHandler? SimDisconnected;
+        /// <summary>
+        /// Event triggered when simulator data is received.
+        /// </summary>
         public event EventHandler<SimulatorData>? SimDataRecieved;
+        /// <summary>
+        /// Event triggered when the simulator is successfully connected.
+        /// </summary>
         protected virtual void OnSimConnected()
         {
             EventHandler? handler = SimConnected;
             if (handler != null)
             {
-                handler(this,EventArgs.Empty);
+                handler(this, EventArgs.Empty);
             }
         }
+        /// <summary>
+        /// Event triggered when the simulator is disconnected.
+        /// </summary>
         protected virtual void OnSimDisconnected()
         {
             if (timer != null)
@@ -384,9 +410,13 @@ namespace SimListener
             EventHandler? handler = SimDisconnected;
             if (handler != null)
             {
-                handler(this,EventArgs.Empty);
+                handler(this, EventArgs.Empty);
             }
         }
+        /// <summary>
+        /// Event triggered when simulator data is received.
+        /// </summary>
+        /// <param name="e">The simulator data containing aircraft information and timestamp.</param>
         protected virtual void OnSimDataRecieved(SimulatorData e)
         {
             EventHandler<SimulatorData>? handler = SimDataRecieved;
