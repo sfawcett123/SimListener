@@ -9,7 +9,7 @@ namespace SimListener
     /// Represents a connection to the Microsoft Flight Simulator using SimConnect.
     /// Provides methods to manage simulator data requests and handle connection events.
     /// </summary>
-    public class Connect : IDisposable
+    public partial class Connect : IDisposable
     {
         #region Dispose and Connected Properties
         /// <summary>
@@ -48,8 +48,7 @@ namespace SimListener
         }
         #endregion
 
-        #region Private
-        private const int WM_USER_SIMCONNECT = 0x0402;
+        #region Private variables
         private SimConnect? m_oSimConnect = null;
         private ObservableCollection<SimvarRequest>? lSimvarRequests;
         System.Timers.Timer? timer;
@@ -57,7 +56,9 @@ namespace SimListener
         private uint m_iCurrentDefinition = 0;
         private uint m_iCurrentRequest = 0;
         private IntPtr hWnd = IntPtr.Zero;
+        #endregion
 
+        #region Private Methods
         private void ConnectToSim()
         {
             if (m_oSimConnect is null)
@@ -255,6 +256,9 @@ namespace SimListener
             return request != null && SimVars.Names.Contains(request);
         }
 
+        #endregion
+
+        #region Public Methods
         /// <summary>  
         /// Retrieves the current aircraft data and connection status from the simulator.  
         /// </summary>  
