@@ -376,6 +376,7 @@ namespace SimListener
                 }               
             }
         }
+
         /// <summary>
         /// Event triggered when the simulator is successfully connected.
         /// </summary>
@@ -391,6 +392,7 @@ namespace SimListener
         /// <summary>
         /// Event triggered when the simulator is successfully connected.
         /// </summary>
+
         protected virtual void OnSimConnected()
         {
             EventHandler? handler = SimConnected;
