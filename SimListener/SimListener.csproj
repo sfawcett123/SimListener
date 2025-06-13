@@ -7,16 +7,17 @@
     <Platforms>x64;AnyCPU</Platforms>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <Title>Sim Listener Library</Title>
-    <Copyright>Steven Fawcett</Copyright>
+    <Copyright>© 2024 Sim Listener.</Copyright>
 	<Authors>Steven Fawcett</Authors> 
-	<Company>Steven Fawcett</Company>
+	<Company>Steven Fawcett Productions</Company>
     <Description>Sim Listener Library for Microsoft Flight Simulator 2024</Description>
     <PackageId>SimListener</PackageId>
 	<PackageIcon>airplane.png</PackageIcon>
-    <PackageProjectUrl>https://github.com/sfawcett123/SimListener</PackageProjectUrl>
+    <PackageProjectUrl>https://sfawcett123.github.io/</PackageProjectUrl>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <RepositoryUrl>https://github.com/sfawcett123/SimListener</RepositoryUrl>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
+	<PackageTags>MSFS Simulator Listener</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
