@@ -12,11 +12,7 @@
 	<Company>Steven Fawcett</Company>
     <Description>Sim Listener Library for Microsoft Flight Simulator 2024</Description>
     <PackageId>SimListener</PackageId>
-	<icon>assets/airplane.png</icon>
-	<PackageIcon>assets/airplane.png</PackageIcon>
-	<files>
-		  <file src="assets/airplane.png" target="" /> 
-	</files>
+	<PackageIcon>airplane.png</PackageIcon>
     <PackageProjectUrl>https://github.com/sfawcett123/SimListener</PackageProjectUrl>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <RepositoryUrl>https://github.com/sfawcett123/SimListener</RepositoryUrl>
@@ -32,6 +28,10 @@
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </None>
+	<None Include="assets\airplane.png">
+		  <Pack>True</Pack>
+		  <PackagePath>\</PackagePath>
+	 </None>
   </ItemGroup>
 		  
   <ItemGroup>
@@ -61,13 +61,6 @@
   <ItemGroup>
     <Folder Include="assets\" />
   </ItemGroup>
-		  
-  <ItemGroup>
-      <None Update="assets\airplane.png">
-	  <Pack>True</Pack>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-		  
+		    
 
 </Project>
