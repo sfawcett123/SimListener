@@ -2,12 +2,13 @@
 
   <PropertyGroup>
     <TargetFramework>net8.0-windows7.0</TargetFramework>
+	<GenerateDocumentationFile>true</GenerateDocumentationFile>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <Platforms>x64;AnyCPU</Platforms>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <Title>Sim Listener Library</Title>
-    <Copyright>© 2024 Sim Listener.</Copyright>
+    <Copyright>© $([System.DateTime]::Now.Year) Sim Listener.</Copyright>
 	<Authors>Steven Fawcett</Authors> 
 	<Company>Steven Fawcett Productions</Company>
     <Description>Sim Listener Library for Microsoft Flight Simulator 2024</Description>

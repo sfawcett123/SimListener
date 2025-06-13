@@ -41,9 +41,19 @@ namespace SimListener
         private bool m_bStillPending = false;
 
     };
+    /// <summary>  
+    /// This class is used to pass data from the simulator to the listener.  
+    /// </summary>  
     public class SimulatorData : EventArgs
     {
+        /// <summary>  
+        /// Gets or sets the time when the data was received.  
+        /// </summary>  
         public DateTime TimeReached { get; set; }
-        public List<Dictionary<string,string>> AircraftData { get; set; } = new List<Dictionary<string, string>>();
+
+        /// <summary>  
+        /// Gets or sets the aircraft data as a list of dictionaries containing key-value pairs.  
+        /// </summary>  
+        public List<Dictionary<string, string>> AircraftData { get; set; } = new List<Dictionary<string, string>>();
     }
 }
