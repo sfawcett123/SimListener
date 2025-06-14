@@ -82,8 +82,7 @@ namespace SimListener
         private uint m_iCurrentDefinition = 0;
         private uint m_iCurrentRequest = 0;
         private IntPtr hWnd = IntPtr.Zero;
-        private const int DefaultTimerIntervalMs = 1000;
-        private const string UnknownAircraft = "Unknown";
+        private readonly object simvarRequestsLock = new();
         #endregion
 
         #region Private Methods
@@ -136,12 +135,12 @@ namespace SimListener
             if (!ValidateRequest(_sNewSimvarRequest))
             {
                 logger?.LogError($"Invalid request: {_sNewSimvarRequest}. Skipping.");
-                return;
+                throw new InvalidSimDataRequestException($"Invalid request: {_sNewSimvarRequest}. Skipping.");
             }
             if (m_oSimConnect is null)
             {
                 logger?.LogDebug("SimConnect is not connected. Cannot add request.");
-                return;
+                throw new SimulatorNotConnectedException("SimConnect is not connected. Cannot add request.");
             }
             if (lSimvarRequests is null)
             {
@@ -274,51 +273,57 @@ namespace SimListener
                 logger?.LogError(ex, "Error processing SimConnect_OnRecvEvent.");
             }
         }
+        
+
+        // Replace the method with thread-safe access
         private void SimConnect_OnRecvSimobjectDataBytype(SimConnect sender, SIMCONNECT_RECV_SIMOBJECT_DATA_BYTYPE data)
         {
             logger?.LogDebug($"Received SimObject Data for Request ID: {data.dwRequestID}");
             List<Dictionary<string, string>> AircraftData = new List<Dictionary<string, string>>();
 
             uint iRequest = data.dwRequestID;
-            if (lSimvarRequests != null)
+            lock (simvarRequestsLock)
             {
-                foreach (SimvarRequest oSimvarRequest in lSimvarRequests)
+                if (lSimvarRequests != null)
                 {
-                    if (iRequest == (uint)oSimvarRequest.eRequest)
+                    foreach (SimvarRequest oSimvarRequest in lSimvarRequests)
                     {
-                        logger?.LogDebug($"Processing request: {oSimvarRequest.sName} with ID: {iRequest} == {(uint)oSimvarRequest.eRequest}");
-                        if (string.IsNullOrEmpty(oSimvarRequest.sName))
+                        if (iRequest == (uint)oSimvarRequest.eRequest)
                         {
-                            logger?.LogError($"Request {iRequest} has no name. Skipping.");
-                            continue;
-                        }
-
-                        try
-                        {
-                            if (oSimvarRequest.bIsString)
+                            logger?.LogDebug($"Processing request: {oSimvarRequest.sName} with ID: {iRequest} == {(uint)oSimvarRequest.eRequest}");
+                            if (string.IsNullOrEmpty(oSimvarRequest.sName))
                             {
-                                ResultStructure result = (ResultStructure)data.dwData[0];
-                                oSimvarRequest.dValue = 0;
-                                oSimvarRequest.sValue = result.sValue;
-                                AircraftData.Add(new Dictionary<string, string> { { oSimvarRequest.sName, oSimvarRequest.sValue ?? string.Empty } });
-                                logger?.LogDebug($"Received string value: {oSimvarRequest.sValue} for request: {oSimvarRequest.sName}");
+                                logger?.LogError($"Request {iRequest} has no name. Skipping.");
+                                continue;
                             }
-                            else
-                            {
-                                double dValue = (double)data.dwData[0];
-                                oSimvarRequest.dValue = dValue;
-                                oSimvarRequest.sValue = dValue.ToString("F9");
-                                AircraftData.Add(new Dictionary<string, string> { { oSimvarRequest.sName, oSimvarRequest.dValue.ToString() } });
-                                logger?.LogDebug($"Received double value: {oSimvarRequest.dValue} for request: {oSimvarRequest.sName}");
-                            }
-                        }
-                        catch (Exception ex)
-                        {
-                            logger?.LogError(ex, $"Error processing SimobjectData for {oSimvarRequest.sName}");
-                        }
 
-                        oSimvarRequest.bPending = false;
-                        oSimvarRequest.bStillPending = false;
+                            try
+                            {
+                                if (oSimvarRequest.bIsString)
+                                {
+                                    ResultStructure result = (ResultStructure)data.dwData[0];
+                                    oSimvarRequest.dValue = 0;
+                                    oSimvarRequest.sValue = result.sValue;
+                                    AircraftData.Add(new Dictionary<string, string> { { oSimvarRequest.sName, oSimvarRequest.sValue ?? string.Empty } });
+                                    logger?.LogDebug($"Received string value: {oSimvarRequest.sValue} for request: {oSimvarRequest.sName}");
+                                }
+                                else
+                                {
+                                    double dValue = (double)data.dwData[0];
+                                    oSimvarRequest.dValue = dValue;
+                                    oSimvarRequest.sValue = dValue.ToString("F9");
+                                    AircraftData.Add(new Dictionary<string, string> { { oSimvarRequest.sName, oSimvarRequest.dValue.ToString() } });
+                                    logger?.LogDebug($"Received double value: {oSimvarRequest.dValue} for request: {oSimvarRequest.sName}");
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                logger?.LogError(ex, $"Error processing SimobjectData for {oSimvarRequest.sName}");
+                            }
+
+                            oSimvarRequest.bPending = false;
+                            oSimvarRequest.bStillPending = false;
+                        }
                     }
                 }
             }
@@ -395,6 +400,7 @@ namespace SimListener
             catch (Exception ex)
             {
                 logger?.LogError(ex, $"Error adding request: {_sNewSimvarRequest}");
+                throw; // Fixes CA2200 by re-throwing the exception without altering the stack trace.
             }
         }
         /// <summary>
@@ -414,6 +420,7 @@ namespace SimListener
                     catch (Exception ex)
                     {
                         logger?.LogError(ex, $"Error adding request: {output}");
+                        throw;
                     }
                 }
             }
@@ -573,6 +580,22 @@ namespace SimListener
                 logger?.LogError(ex, "Error invoking SimDataRecieved event.");
             }
         }
+        /// <summary>
+        /// Returns a list of all current SimvarRequests.
+        /// </summary>
+        /// <returns>A list of SimvarRequest objects.</returns>
+        public List<string> listRequests()
+        {
+            lock (simvarRequestsLock)
+            {
+                return lSimvarRequests?
+                    .Where(r => !string.IsNullOrEmpty(r.sName))
+                    .Select(r => r.sName!)
+                    .ToList() ?? new List<string>();
+            }
+        }
         #endregion
+ 
+    
     }
 }
