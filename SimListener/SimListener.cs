@@ -9,38 +9,71 @@ namespace SimListener
         public string sValue;
     };
 
-    internal class SimvarRequest 
+    /// <summary>
+    /// Represents a request for a simulation variable.
+    /// </summary>
+    internal class SimvarRequest
     {
+        /// <summary>
+        /// Gets or sets the definition of the simulation variable.
+        /// </summary>
         public DEFINITION eDef = DEFINITION.Dummy;
+
+        /// <summary>
+        /// Gets or sets the request type for the simulation variable.
+        /// </summary>
         public REQUEST eRequest = REQUEST.Dummy;
 
+        /// <summary>
+        /// Gets or sets the name of the simulation variable.
+        /// </summary>
         public string? sName { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the simulation variable is a string.
+        /// </summary>
         public bool bIsString { get; set; }
+
+        /// <summary>
+        /// Gets or sets the numeric value of the simulation variable.
+        /// </summary>
         public double dValue
         {
             set { m_dValue = value; }
             get { return m_dValue; }
         }
         private double m_dValue = 0.0;
+
+        /// <summary>
+        /// Gets or sets the string value of the simulation variable.
+        /// </summary>
         public string? sValue
         {
             set { m_sValue = value; }
-
             get => m_sValue;
         }
         private string? m_sValue = null;
 
+        /// <summary>
+        /// Gets or sets the units of the simulation variable.
+        /// </summary>
         public string? sUnits { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether the request is pending.
+        /// </summary>
         public bool bPending = true;
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the request is still pending.
+        /// </summary>
         public bool bStillPending
         {
             set { m_bStillPending = value; }
             get { return m_bStillPending; }
         }
         private bool m_bStillPending = false;
-
-    };
+    }
     /// <summary>  
     /// This class is used to pass data from the simulator to the listener.  
     /// </summary>  

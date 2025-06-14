@@ -1,14 +1,38 @@
 ﻿namespace SimListener
 {
+    /// <summary>  
+    /// Enumeration for SimConnect definitions.  
+    /// </summary>  
     internal enum DEFINITION
     {
+        /// <summary>  
+        /// Dummy definition.  
+        /// </summary>  
         Dummy = 0,
+
+        /// <summary>  
+        /// Maximum number of definitions.  
+        /// </summary>  
         MAX_DEFINITIONS = 100
     };
+    /// <summary>  
+    /// Enumeration for SimConnect requests.  
+    /// </summary>  
     internal enum REQUEST
     {
+        /// <summary>  
+        /// Dummy request.  
+        /// </summary>  
         Dummy = 0,
+
+        /// <summary>  
+        /// Request for result structure.  
+        /// </summary>  
         ResultStructure,
+
+        /// <summary>  
+        /// Maximum number of requests.  
+        /// </summary>  
         MAX_REQUESTS = 100
     };
     internal enum Event
@@ -29,5 +53,7 @@
         /// </summary>   
 
         private const uint WM_USER_SIMCONNECT = 0x0402;
+        private const int DefaultTimerIntervalMs = 1000;
+        private const string UnknownAircraft = "Unknown";
     }
 }

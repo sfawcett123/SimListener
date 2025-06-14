@@ -1,14 +1,4 @@
-﻿using Microsoft.VisualStudio.TestPlatform.ObjectModel;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SimListener;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Runtime.Intrinsics.X86;
-using System.Text;
-using System.Threading.Tasks;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+﻿using System.ComponentModel;
 
 namespace SimListener.Tests
 {
@@ -16,12 +6,35 @@ namespace SimListener.Tests
     public class ConnectTests
     {
         [TestMethod()]
-        public void AddRequestsTest1()
+        [ExpectedException(typeof(InvalidSimDataRequestException))]
+        public void CheckInvalidRequest()
         {
             Connect cnx = new();
-
             cnx.AddRequest("SHOULD FAIL");
+        }
 
+        [TestMethod()]
+        [Category("SimRunning")]
+
+        public void CheckAddingSingleRequest()
+        {
+            Connect cnx = new();
+            string request = "PLANE ALTITUDE";
+            cnx.AddRequest(request);
+            Assert.IsTrue(cnx.listRequests().Contains(request), "The request was not added successfully.");
+        }
+
+        [TestMethod()]
+        [Category("SimRunning")]
+        public void CheckAddingListOfRequests()
+        {
+            Connect cnx = new();
+            List<string> requests = new() { "PLANE ALTITUDE", "PLANE LATITUDE" };
+            cnx.AddRequests(requests);
+            foreach (string request in requests) // Fixed CS0230 by specifying the type 'string'  
+            {
+                Assert.IsTrue(cnx.listRequests().Contains(request), "The request was not added successfully.");
+            }
         }
     }
 }
