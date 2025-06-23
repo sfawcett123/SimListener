@@ -1,5 +1,6 @@
-﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.EventLog;
+
 using Microsoft.FlightSimulator.SimConnect;
 using System.Collections.ObjectModel;
 using System.Runtime.InteropServices;
@@ -185,6 +186,14 @@ namespace SimListener
                 oSimvarRequest.bPending = true;
                 oSimvarRequest.bStillPending = true;
             }
+            catch (Exception ex)
+            {
+                logger?.LogError(ex, $"Failed to register SimvarRequest: {_sNewSimvarRequest}");
+                oSimvarRequest.bPending = true;
+                oSimvarRequest.bStillPending = true;
+            }
+
+            lSimvarRequests.Add(oSimvarRequest);
 
             lSimvarRequests.Add(oSimvarRequest);
 
@@ -527,6 +536,7 @@ namespace SimListener
                 }
                 else
                 {
+
                     Dictionary<string, string> data = AircraftData();
                     if (data.Count > 0)
                     {
@@ -570,6 +580,7 @@ namespace SimListener
             }
             catch (Exception ex)
             {
+
                 logger?.LogError(ex, "Error invoking SimConnected event.");
             }
         }
