@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.EventLog;
+
 using Microsoft.FlightSimulator.SimConnect;
 using System.Collections.ObjectModel;
 using System.Runtime.InteropServices;
@@ -73,9 +75,21 @@ namespace SimListener
         #endregion
 
         #region Private variables
+        private static EventLogSettings myEventLogSettings = new EventLogSettings
+        {
+            SourceName = _sourceName,
+            LogName = _logName
+        };
+        private const string _sourceName = "Simulator Service";
+        private const string _logName = "Application";
         private SimConnect? m_oSimConnect = null;
         private ObservableCollection<SimvarRequest> lSimvarRequests = new();
-        private ILoggerFactory factory = LoggerFactory.Create(builder => builder.AddConsole());
+        private ILoggerFactory factory = LoggerFactory.Create(builder =>
+        {
+            builder.AddConsole();
+            builder.AddDebug();
+            builder.AddEventLog(myEventLogSettings);
+        });
         private ILogger? logger = null;
         private System.Timers.Timer? timer;
         private string AircaftLoaded = UnknownAircraft;
@@ -172,6 +186,14 @@ namespace SimListener
                 oSimvarRequest.bPending = true;
                 oSimvarRequest.bStillPending = true;
             }
+            catch (Exception ex)
+            {
+                logger?.LogError(ex, $"Failed to register SimvarRequest: {_sNewSimvarRequest}");
+                oSimvarRequest.bPending = true;
+                oSimvarRequest.bStillPending = true;
+            }
+
+            lSimvarRequests.Add(oSimvarRequest);
 
             lSimvarRequests.Add(oSimvarRequest);
 
@@ -388,6 +410,23 @@ namespace SimListener
         }
 
         /// <summary>
+        /// Gets or sets a value indicating whether the timer is enabled.
+        /// </summary>
+        public bool Enabled
+        {
+            get
+            {
+                return timer?.Enabled ?? false;
+            }
+            set
+            {
+                if (timer != null)
+                {
+                    timer.Enabled = value;
+                }
+            }
+        }
+        /// <summary>
         /// Adds a new Simvar request to the SimConnect connection.
         /// </summary>
         /// <param name="_sNewSimvarRequest">The name of the Simvar to request.</param>
@@ -497,6 +536,7 @@ namespace SimListener
                 }
                 else
                 {
+
                     Dictionary<string, string> data = AircraftData();
                     if (data.Count > 0)
                     {
@@ -540,6 +580,7 @@ namespace SimListener
             }
             catch (Exception ex)
             {
+
                 logger?.LogError(ex, "Error invoking SimConnected event.");
             }
         }
