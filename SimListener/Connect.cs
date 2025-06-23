@@ -186,12 +186,6 @@ namespace SimListener
                 oSimvarRequest.bPending = true;
                 oSimvarRequest.bStillPending = true;
             }
-            catch (Exception ex)
-            {
-                logger?.LogError(ex, $"Failed to register SimvarRequest: {_sNewSimvarRequest}");
-                oSimvarRequest.bPending = true;
-                oSimvarRequest.bStillPending = true;
-            }
 
             lSimvarRequests.Add(oSimvarRequest);
 
