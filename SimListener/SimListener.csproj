@@ -7,6 +7,7 @@
     <Nullable>enable</Nullable>
     <Platforms>x64;AnyCPU</Platforms>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+	<EnableWindowsTargeting>True</EnableWindowsTargeting>
     <Title>Sim Listener Library</Title>
     <Copyright>© $([System.DateTime]::Now.Year) Sim Listener.</Copyright>
 	<Authors>Steven Fawcett</Authors> 
