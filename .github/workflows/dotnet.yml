@@ -48,7 +48,7 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
-          dotnet-version: 8.0.x
+          dotnet-version: net8.0-windows10.0
 
     # Create the NuGet package in the folder from the environment variable NuGetDirectory
 
@@ -109,7 +109,7 @@ jobs:
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v4
         with:
-           dotnet-version: 8.0.x
+           dotnet-version: net8.0-windows10.0
            
       # Publish all NuGet packages to NuGet.org
       # Use --skip-duplicate to prevent errors if a package with the same version already exists.
