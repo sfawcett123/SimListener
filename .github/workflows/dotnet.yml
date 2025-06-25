@@ -48,10 +48,9 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
-          dotnet-version: net8.0-windows10.0
+          dotnet-version: 8.0.x
 
     # Create the NuGet package in the folder from the environment variable NuGetDirectory
-
     - name: Move to the SimListener directory
       run: cd ${{ github.workspace }}/SimListener
 
@@ -109,7 +108,7 @@ jobs:
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v4
         with:
-           dotnet-version: net8.0-windows10.0
+           dotnet-version: 8.0.x
            
       # Publish all NuGet packages to NuGet.org
       # Use --skip-duplicate to prevent errors if a package with the same version already exists.
