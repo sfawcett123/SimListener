@@ -1,4 +1,5 @@
-﻿using System.Runtime.InteropServices;
+﻿using Microsoft.FlightSimulator.SimConnect;
+using System.Runtime.InteropServices;
 
 namespace SimListener
 {
@@ -32,7 +33,7 @@ namespace SimListener
         /// <summary>
         /// Gets or sets a value indicating whether the simulation variable is a string.
         /// </summary>
-        public bool bIsString { get; set; }
+        public SimVars.Measures eMeasure { set; get; } = new SimVars.Measures();
 
         /// <summary>
         /// Gets or sets the numeric value of the simulation variable.
@@ -85,7 +86,7 @@ namespace SimListener
         public DateTime TimeReached { get; set; }
 
         /// <summary>  
-        /// Gets or sets the aircraft data as a list of dictionaries containing key-value pairs.  
+        /// Gets or sets the aircraft data as a list of dictionaries containing key-    value pairs.  
         /// </summary>  
         public List<Dictionary<string, string>> AircraftData { get; set; } = new List<Dictionary<string, string>>();
     }

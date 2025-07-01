@@ -3,15 +3,19 @@ using System.Diagnostics;
 using System;
 using System.Threading.Tasks;
 using System.Timers;
+using Microsoft.Extensions.Logging;
 
 class Example
 {
+    static Connect cnx = new(0, 2000);
+
     static void Main()
     {
         // This is a test program to connect to the simulator and receive data.
         Console.WriteLine("Starting Example Program.");
-        Connect cnx = new( 0, 2000); 
-        
+              
+        cnx.SetLogLevel(LogLevel.Debug);
+
         Console.WriteLine("Adding SimConnected Event...");
         cnx.SimConnected += c_SimConnected;
 
@@ -27,8 +31,7 @@ class Example
         Console.WriteLine($"Simulator Connected.");
         if (sender == null) return;
 
-        Connect cnx = (Connect)sender;
-        List<string> Data = new List<string>() { "PLANE ALTITUDE", "PLANE LATITUDE" };
+        List<string> Data = new List<string>() { "PLANE ALTITUDE", "PLANE LATITUDE" , "TURB ENG N1", "TURB ENG N2" };
         cnx.AddRequests(Data);
     }
 
@@ -39,7 +42,7 @@ class Example
         {
             foreach (var kvp in item)
             {
-                Console.WriteLine($"{kvp.Key}: {kvp.Value}");
+                Console.WriteLine($"Connected is {cnx.Connected} : {kvp.Key}: {kvp.Value}");
             }
         }
 

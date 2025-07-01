@@ -1,7 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net8.0-windows8.0</TargetFramework>
 	<GenerateDocumentationFile>true</GenerateDocumentationFile>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
@@ -21,7 +20,18 @@
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
 	<PackageTags>MSFS Simulator Listener</PackageTags>
 	<SupportedOSPlatformVersion>8.0</SupportedOSPlatformVersion>
+	<TargetFramework>net8.0</TargetFramework>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="measures.yaml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="measures.yaml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
 
   <ItemGroup>
     <None Include="..\LICENSE">
@@ -47,6 +57,7 @@
     <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="9.0.6" />
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="9.0.6" />
     <PackageReference Include="Microsoft.Extensions.Logging.EventLog" Version="9.0.6" />
+    <PackageReference Include="YamlDotNet" Version="16.3.0" />
   </ItemGroup>
 		  
   <ItemGroup>
