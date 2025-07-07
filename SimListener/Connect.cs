@@ -128,15 +128,15 @@ namespace SimListener
                         SimConnected?.Invoke(this, EventArgs.Empty);
                     }
                 }
-                catch (COMException ex)
+                catch (COMException)
                 {
-                    logger?.LogError(ex, "SimConnect connection failed. Is MSFS running?");
+                    logger?.LogError("SimConnect connection failed. Is MSFS running?");
                     m_oSimConnect = null;
                     SimDisconnected?.Invoke(this, EventArgs.Empty);
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
-                    logger?.LogError(ex, "Unexpected error during SimConnect connection.");
+                    logger?.LogError("Unexpected error during SimConnect connection.");
                     m_oSimConnect = null;
                     SimDisconnected?.Invoke(this, EventArgs.Empty);
                 }
@@ -145,12 +145,14 @@ namespace SimListener
         private void InternalAddRequest(string _sNewSimvarRequest, string _sNewUnitRequest, bool _bIsString)
         {
             logger?.LogInformation($"AddRequest {_sNewSimvarRequest} ");
+            //TODO : Uncomment the validation when the validation logic is implemented.
 
-            if (!ValidateRequest(_sNewSimvarRequest))
-            {
-                logger?.LogError($"Invalid request: {_sNewSimvarRequest}. Skipping.");
-                throw new InvalidSimDataRequestException($"Invalid request: {_sNewSimvarRequest}. Skipping.");
-            }
+            //if (!ValidateRequest(_sNewSimvarRequest))
+            //{
+            //     logger?.LogError($"Invalid request: {_sNewSimvarRequest}. Skipping.");
+            //     throw new InvalidSimDataRequestException($"Invalid request: {_sNewSimvarRequest}. Skipping.");
+            //}
+
             if (m_oSimConnect is null)
             {
                 logger?.LogDebug("SimConnect is not connected. Cannot add request.");
