@@ -5,7 +5,7 @@
 	<GenerateDocumentationFile>true</GenerateDocumentationFile>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <Platforms>x64;x64</Platforms>
+    <Platforms>x64</Platforms>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 	<EnableWindowsTargeting>True</EnableWindowsTargeting>
     <Title>Sim Listener Library</Title>
@@ -14,7 +14,6 @@
 	<Company>Steven Fawcett Productions</Company>
     <Description>Sim Listener Library for Microsoft Flight Simulator 2024</Description>
     <PackageId>SimListener</PackageId>
-	<PackageIcon>airplane.png</PackageIcon>
     <PackageProjectUrl>https://sfawcett123.github.io/</PackageProjectUrl>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <RepositoryUrl>https://github.com/sfawcett123/SimListener</RepositoryUrl>
@@ -22,6 +21,16 @@
 	<PackageTags>MSFS Simulator Listener</PackageTags>
 	<SupportedOSPlatformVersion>8.0</SupportedOSPlatformVersion>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="SimConnect.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="SimConnect.dll">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
 
   <ItemGroup>
     <None Include="..\LICENSE">
@@ -32,14 +41,6 @@
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </None>
-	<None Include="assets\airplane.png">
-		  <Pack>True</Pack>
-		  <PackagePath>\</PackagePath>
-	 </None>
-  </ItemGroup>
-		  
-  <ItemGroup>
-    <Folder Include="assets\" />
   </ItemGroup>
 		  
   <ItemGroup>
@@ -52,15 +53,6 @@
   <ItemGroup>
     <Reference Include="Microsoft.FlightSimulator.SimConnect">
       <HintPath>..\..\..\..\..\..\..\MSFS 2024 SDK\SimConnect SDK\lib\managed\Microsoft.FlightSimulator.SimConnect.dll</HintPath>
-	</Reference>
-  </ItemGroup>
-		  
-  <ItemGroup>
-    <None Update="Microsoft.FlightSimulator.SimConnect.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="SimConnect.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+    </Reference>
   </ItemGroup>		    
 </Project>
