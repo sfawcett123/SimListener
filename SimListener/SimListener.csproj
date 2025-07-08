@@ -27,12 +27,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="SimConnect.dll">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-
-  <ItemGroup>
     <None Include="..\LICENSE">
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
@@ -54,5 +48,11 @@
     <Reference Include="Microsoft.FlightSimulator.SimConnect">
       <HintPath>..\..\..\..\..\..\..\MSFS 2024 SDK\SimConnect SDK\lib\managed\Microsoft.FlightSimulator.SimConnect.dll</HintPath>
     </Reference>
+  </ItemGroup>
+		  
+  <ItemGroup>
+    <None Update="lib\SimConnect.dll">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
   </ItemGroup>		    
 </Project>
