@@ -7,6 +7,7 @@ namespace SimListenerTest
     public class ConnectTests
     {
         [TestMethod()]
+        [TestCategory("SimRunning")]
         public void CheckInvalidRequest()
         {
             Connect cnx = new();
@@ -14,7 +15,7 @@ namespace SimListenerTest
         }
 
         [TestMethod()]
-        [Category("SimRunning")]
+        [TestCategory("SimRunning")]
         public void CheckAddingSingleRequest()
         {
             Connect cnx = new();
@@ -24,7 +25,7 @@ namespace SimListenerTest
         }
 
         [TestMethod()]
-        [Category("SimRunning")]
+        [TestCategory("SimRunning")]
         public void CheckAddingListOfRequests()
         {
             Connect cnx = new();

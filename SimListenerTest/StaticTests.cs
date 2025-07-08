@@ -9,6 +9,7 @@ namespace SimListenerTest
         [DataRow("PLANE ALTITUDE")]
         [DataRow("PLANE ALTITUDE:1")]
         [DataRow("PLANE ALTITUDE:2")]
+        [TestCategory("Static")]
         public void CheckValidate(string validRequest)
         {
             // Arrange
@@ -21,6 +22,7 @@ namespace SimListenerTest
         [DataRow("PLANE ALTITUDE:-1")]
         [DataRow("PLANE ALTITUDE:0")]
         [DataRow("PLANE ALTITUDE:11")]
+        [TestCategory("Static")]
         public void CheckFailsValidate(string validRequest)
         {
             // Arrange
