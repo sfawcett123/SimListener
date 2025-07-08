@@ -145,13 +145,13 @@ namespace SimListener
         private void InternalAddRequest(string _sNewSimvarRequest, string _sNewUnitRequest, bool _bIsString)
         {
             logger?.LogInformation($"AddRequest {_sNewSimvarRequest} ");
-            //TODO : Uncomment the validation when the validation logic is implemented.
 
-            //if (!ValidateRequest(_sNewSimvarRequest))
-            //{
-            //     logger?.LogError($"Invalid request: {_sNewSimvarRequest}. Skipping.");
-            //     throw new InvalidSimDataRequestException($"Invalid request: {_sNewSimvarRequest}. Skipping.");
-            //}
+
+            if (!ValidateRequest(_sNewSimvarRequest))
+            {
+                 logger?.LogError($"Invalid request: {_sNewSimvarRequest}. Skipping.");
+                 throw new InvalidSimDataRequestException($"Invalid request: {_sNewSimvarRequest}. Skipping.");
+            }
 
             if (m_oSimConnect is null)
             {
@@ -356,7 +356,9 @@ namespace SimListener
         }
         private static bool ValidateRequest(string request)
         {
-            return !string.IsNullOrWhiteSpace(request) && SimVars.Names.Contains(request);
+            string trimmedRequest = request?.Split(":")[0] ?? string.Empty;
+
+            return !string.IsNullOrWhiteSpace(request) && SimVars.Names.Contains(trimmedRequest);
         }
 
         #endregion
