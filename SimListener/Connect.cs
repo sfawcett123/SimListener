@@ -145,13 +145,13 @@ namespace SimListener
         private void InternalAddRequest(string _sNewSimvarRequest, string _sNewUnitRequest, bool _bIsString)
         {
             logger?.LogInformation($"AddRequest {_sNewSimvarRequest} ");
-            //TODO : Uncomment the validation when the validation logic is implemented.
 
-            //if (!ValidateRequest(_sNewSimvarRequest))
-            //{
-            //     logger?.LogError($"Invalid request: {_sNewSimvarRequest}. Skipping.");
-            //     throw new InvalidSimDataRequestException($"Invalid request: {_sNewSimvarRequest}. Skipping.");
-            //}
+
+            if (!ValidateRequest(_sNewSimvarRequest))
+            {
+                 logger?.LogError($"Invalid request: {_sNewSimvarRequest}. Skipping.");
+                 throw new InvalidSimDataRequestException($"Invalid request: {_sNewSimvarRequest}. Skipping.");
+            }
 
             if (m_oSimConnect is null)
             {
@@ -354,9 +354,47 @@ namespace SimListener
                 logger?.LogError(ex, "Error invoking SimDataRecieved event.");
             }
         }
-        private static bool ValidateRequest(string request)
+        /// <summary>
+        /// Validates a Simvar request string to ensure it is properly formatted and exists in the list of known SimVars.
+        /// </summary>
+        /// <param name="request">The Simvar request string to validate.</param>
+        /// <returns>
+        /// True if the request is valid and exists in the list of known SimVars; otherwise, false.
+        /// </returns>
+        public static bool ValidateRequest(string request)
         {
-            return !string.IsNullOrWhiteSpace(request) && SimVars.Names.Contains(request);
+            Console.WriteLine($"Validating request: {request}");
+
+            string trimmedRequest;
+            string trimmedIndex;
+
+            if ( request?.Split(":").Length < 2 )
+            {
+                // If no index is provided, default to "0"
+                trimmedRequest = request ?? "";
+                trimmedIndex = "1";
+            }
+            else
+            {
+                trimmedRequest = request?.Split(":")[0] ?? "";
+                trimmedIndex = request?.Split(":")[1] ?? "1";
+            }
+            Console.WriteLine($"Checking index : {trimmedIndex} is an integer between 1 and 10");
+
+            if (!int.TryParse(trimmedIndex, out int index))
+            {
+                Console.WriteLine($"Non integer validating request index: {trimmedIndex}");
+                return false;
+            }
+
+            if (index < 1 || index > 10)
+            {
+                Console.WriteLine($"Integer value out of bounds in request index: {index}");
+                return false;
+            }
+
+            Console.WriteLine($"Checking request: {trimmedRequest} is in SimVar List");
+            return !string.IsNullOrWhiteSpace(request) && SimVars.Names.Contains(trimmedRequest);
         }
 
         #endregion
