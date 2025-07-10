@@ -65,7 +65,7 @@ namespace SimListener
         /// <summary>
         /// Gets a value indicating whether the connection to the simulator is established.
         /// </summary>
-        public bool Connected
+        public bool isConnected
         {
             get
             {
@@ -410,7 +410,7 @@ namespace SimListener
 
             Dictionary<string, string> ReturnValue = new()
                 {
-                    { "Connected", Connected.ToString() },
+                    { "isConnected", isConnected.ToString() },
                     { "AircaftLoaded", AircaftLoaded ?? UnknownAircraft }
                 };
             try
@@ -563,7 +563,7 @@ namespace SimListener
         {
             try
             {
-                if (!Connected)
+                if (!isConnected)
                 {
                     logger?.LogDebug("Attempting connection...");
                     this.ConnectToSim();
