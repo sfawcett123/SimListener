@@ -53,7 +53,7 @@
         /// </summary>   
 
         private const uint WM_USER_SIMCONNECT = 0x0402;
-        private const int DefaultTimerIntervalMs = 1000;
+        private const int DefaultTimerIntervalMs = 30000;  // Time to check 30 Seconds , I dont want it too slow or two often
         private const string UnknownAircraft = "Unknown";
     }
 }
