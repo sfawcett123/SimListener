@@ -1,5 +1,10 @@
 ﻿namespace SimListener
 {
+    internal enum DATA_DEFINE_ID
+    {
+        AIRCRAFT_POSITION = 101,
+    };
+
     /// <summary>  
     /// Enumeration for SimConnect definitions.  
     /// </summary>  

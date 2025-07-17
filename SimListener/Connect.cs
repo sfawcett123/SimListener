@@ -97,7 +97,35 @@ namespace SimListener
         private uint m_iCurrentRequest = 0;
         private IntPtr hWnd = IntPtr.Zero;
         private readonly object simvarRequestsLock = new();
+
         #endregion
+        public bool WritePosition()
+        {
+            if (m_oSimConnect is null)
+            {
+                logger?.LogError("SimConnect is not connected. Cannot write position.");
+                return false;
+            }
+
+            // Correct the type argument in AddToDataDefinition
+            m_oSimConnect.AddToDataDefinition(DATA_DEFINE_ID.AIRCRAFT_POSITION, "Initial Position", "", SIMCONNECT_DATATYPE.INITPOSITION, 0.0f, SimConnect.SIMCONNECT_UNUSED);
+
+            SIMCONNECT_DATA_INITPOSITION Position;
+
+            Position.Altitude = 5000.0;
+            Position.Latitude = 47.64210;
+            Position.Longitude = -122.13010;
+            Position.Pitch = -0.0;
+            Position.Bank = -1.0;
+            Position.Heading = 180.0;
+            Position.OnGround = 1;
+            Position.Airspeed = 0;
+
+            // Correct the size argument in SetDataOnSimObject
+            m_oSimConnect.SetDataOnSimObject(DATA_DEFINE_ID.AIRCRAFT_POSITION, SimConnect.SIMCONNECT_OBJECT_ID_USER, SIMCONNECT_DATA_SET_FLAG.DEFAULT,  Position);
+
+            return true;
+        }
 
         #region Private Methods
         private void ConnectToSim()
