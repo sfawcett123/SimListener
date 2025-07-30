@@ -1,11 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net8.0-windows8.0</TargetFramework>
+    <TargetFramework>net8.0-windows</TargetFramework>
 	<GenerateDocumentationFile>true</GenerateDocumentationFile>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <Platforms>x64</Platforms>
+    <Platforms>x64;AnyCPU;x86</Platforms>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 	<EnableWindowsTargeting>True</EnableWindowsTargeting>
     <Title>Sim Listener Library</Title>
@@ -19,7 +19,6 @@
     <RepositoryUrl>https://github.com/sfawcett123/SimListener</RepositoryUrl>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
 	<PackageTags>MSFS Simulator Listener</PackageTags>
-	<SupportedOSPlatformVersion>8.0</SupportedOSPlatformVersion>
   </PropertyGroup>
 
   <ItemGroup>
