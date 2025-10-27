@@ -99,7 +99,7 @@ jobs:
     steps:
       # Download the NuGet package created in the previous job
       - name: Download package
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v6
         with:
           name: nuget
           path: ${{ env.NuGetDirectory }}
